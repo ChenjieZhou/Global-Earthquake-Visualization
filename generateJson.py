@@ -2,6 +2,7 @@ import json
 import urllib2
 import requests
 import re
+import pprint
 from bs4 import BeautifulSoup
 import sys
 reload(sys)
@@ -19,10 +20,40 @@ tables = soup.find_all('table', class_='wikitable')[1:]
 for table in tables:
     trs = table.find_all('tr')[1:]
     for tr in trs:
+        start = 0
+        detail = {}
+        location = {}
+        country = ''
+        city = ''
         for td in tr.find_all('td'):
-            print td.text
+            if (start == 0):
+                location['lng'] = str(td.text)
+                print str(td.text)
+
+            if (start == 1):
+                location['lat'] = td.text.decode('utf8')
+            if (start == 2):
+                city = td.text.decode('utf8')
+            if (start == 4):
+                country = td.text.decode('utf8')
+            start = start + 1
+
+        detail['location'] = location
+        detail['country'] = country
+        detail['city'] = city
+        data.append(detail)
 
 
+
+            # print td.text
+            # start = 0;
+
+file=open('data.txt','w')
+file.write(str(data));
+file.close()
+pprint.pprint(data)
+# print data
+>>>>>>> origin/master
 
 
 
@@ -37,13 +68,6 @@ for table in tables:
 
 
 # example dictionary that contains data like you want to have in json
-dic={'age': 100, 'name': 'mkyong.com', 'messages': ['msg 1', 'msg 2', 'msg 3']}
-
-dic['age'] = 20
-
-# get json string from that dictionary
-data=json.dumps(dic)
-print data
 
 
 
