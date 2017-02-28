@@ -7,7 +7,10 @@ var earthquakesMarkers = [];
 
 function initMap() { //init map
     map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: 37.4, lng: -121.8 },
+        center: {
+            lat: 37.4,
+            lng: -121.8
+        },
         zoom: 2
     });
 
@@ -21,11 +24,11 @@ function initMap() { //init map
 
 
     $.ajaxSetup({
-    async: false
+        async: false
     });
     $.getJSON("data/cities.geojson", function(json) {
-      // console.log(json); // this will show the info it in firebug console
-      cities = json.features;
+        // console.log(json); // this will show the info it in firebug console
+        cities = json.features;
     });
 
 
@@ -53,7 +56,7 @@ function initMap() { //init map
     // ];
 
 
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < cities.length; i++) {
 
 
         // var location = new Object();
@@ -78,7 +81,7 @@ function initMap() { //init map
 
         citiesMarkers.push(cityMarker);
 
-        cityMarker.addListener('click', function(){
+        cityMarker.addListener('click', function() {
 
             populateInfoWindow(this, largeInfowindow);
             this.setAnimation(google.maps.Animation.BOUNCE);
@@ -99,7 +102,7 @@ function initMap() { //init map
 
     for (var i = 0; i < earthquakes.length; i++) {
 
-        console.log("earthquakeMarker Correct")
+        // console.log("earthquakeMarker Correct")
         var position = earthquakes[i].location;
         var title = earthquakes[i].title;
 
@@ -118,8 +121,9 @@ function initMap() { //init map
 
         earthquakesMarkers.push(earthquakeMarker);
 
-        earthquakeMarker.addListener('click', function(){
-            console.log(123);
+        earthquakeMarker.addListener('click', function() {
+            // console.log(123);
+            showAllMarkers();
             showImpactCities(this, citiesMarkers);
             populateInfoWindow(this, largeInfowindow);
             // this.setAnimation(google.maps.Animation.BOUNCE);
@@ -153,24 +157,25 @@ function populateInfoWindow(marker, infowindow) {
         infowindow.setContent('<div>' + 'Please Check Your Connection' + '</div>');
         infowindow.open(map, marker);
     }).done(function(response) {
-            var articleList = response[1];
-            articleStr = articleList[0];
-            var url = 'http://en.wikipedia.org/wiki/' + articleStr;
-            if (infowindow.marker != marker) {
-                infowindow.marker = marker;
-                if (articleStr == null) {
-                    infowindow.setContent('<div>' + marker.title + '</div>' + 'Oops, no such wiki');
-                } else {
-                    infowindow.setContent('<div>' + '</div>' + '<a href = "' + url + '">' + articleStr + '</a>');
-                }
-                infowindow.open(map, marker);
-                // Make sure the marker property is cleared if the infowindow is closed.
+        var articleList = response[1];
+        articleStr = articleList[0];
+        var url = 'http://en.wikipedia.org/wiki/' + articleStr;
+        if (infowindow.marker != marker) {
+            infowindow.marker = marker;
+            if (articleStr == null) {
+                infowindow.setContent('<div>' + marker.title + '</div>' + 'Oops, no such wiki');
+            } else {
+                infowindow.setContent('<div>' + '</div>' + '<a href = "' + url + '">' + articleStr + '</a>');
             }
-            // clearTimeout(wikiRequestTimeout);
-        });
+            infowindow.open(map, marker);
+            // Make sure the marker property is cleared if the infowindow is closed.
+        }
+        // clearTimeout(wikiRequestTimeout);
+    });
 
 
     infowindow.addListener('closeclick', function() {
+
         infowindow.setMarker = null;
     });
 }
@@ -190,7 +195,7 @@ function makeMarkerIcon(markerColor) {
 
 
 function stopAnimation(marker) {
-    setTimeout(function () {
+    setTimeout(function() {
         marker.setAnimation(null);
     }, 1500);
 };
@@ -242,15 +247,22 @@ function initEarthquake() {
 };
 
 function cycleIcon(magnitude) {
-        return {
-          path: google.maps.SymbolPath.CIRCLE,
-          fillColor: 'red',
-          fillOpacity: .2,
-          scale: Math.pow(2, magnitude) / 2,
-          strokeColor: 'white',
-          strokeWeight: .5
-        };
-      }
+    return {
+        path: google.maps.SymbolPath.CIRCLE,
+        fillColor: 'red',
+        fillOpacity: .2,
+        scale: Math.pow(2, magnitude) / 2,
+        strokeColor: 'white',
+        strokeWeight: .5
+    };
+};
+
+function showAllMarkers() {
+    for (var i = 0; i < citiesMarkers.length; i++) {
+        citiesMarkers[i].setMap(map);
+    }
+};
+
 
 
 function showImpactCities(earthquakeMarker, markers) {
@@ -261,6 +273,12 @@ function showImpactCities(earthquakeMarker, markers) {
     for (var i = 0; i < markers.length; i++) {
 
         var dis = google.maps.geometry.spherical.computeDistanceBetween(earthquakeMarker.getPosition(), markers[i].getPosition())
-        console.log(dis);
+        // console.log(dis);
+        // console.log(earthquakeMarker.mag)
+        var impactDis = 20 * Math.pow(1.8, (2 * earthquakeMarker.mag - 5)) * 1000;
+        // console.log(impactDis)
+        if (dis > impactDis) {
+            markers[i].setMap(null);
+        };
     }
 };
