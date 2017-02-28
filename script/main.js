@@ -11,7 +11,95 @@ function initMap() { //init map
             lat: 37.4,
             lng: -121.8
         },
-        zoom: 2
+        //mapTypeId: 'satellite',
+        zoom: 2,
+        styles: [
+            {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
+            {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
+            {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
+            {
+              featureType: 'administrative.locality',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#d59563'}]
+            },
+            {
+              featureType: 'poi',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#d59563'}]
+            },
+            {
+              featureType: 'poi.park',
+              elementType: 'geometry',
+              stylers: [{color: '#263c3f'}]
+            },
+            {
+              featureType: 'poi.park',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#6b9a76'}]
+            },
+            {
+              featureType: 'road',
+              elementType: 'geometry',
+              stylers: [{color: '#38414e'}]
+            },
+            {
+              featureType: 'road',
+              elementType: 'geometry.stroke',
+              stylers: [{color: '#212a37'}]
+            },
+            {
+              featureType: 'road',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#9ca5b3'}]
+            },
+            {
+              featureType: 'road.highway',
+              elementType: 'geometry',
+              stylers: [{color: '#746855'}]
+            },
+            {
+              featureType: 'road.highway',
+              elementType: 'geometry.stroke',
+              stylers: [{color: '#1f2835'}]
+            },
+            {
+              featureType: 'road.highway',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#f3d19c'}]
+            },
+            {
+              featureType: 'transit',
+              elementType: 'geometry',
+              stylers: [{color: '#2f3948'}]
+            },
+            {
+              featureType: 'transit.station',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#d59563'}]
+            },
+            {
+              featureType: 'water',
+              elementType: 'geometry',
+              stylers: [{color: '#17263c'}]
+            },
+            {
+              featureType: 'water',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#515c6d'}]
+            },
+            {
+              featureType: 'water',
+              elementType: 'labels.text.stroke',
+              stylers: [{color: '#17263c'}]
+            },
+            {
+         featureType: "administrative",
+         elementType: "labels",
+         stylers: [
+           { visibility: "off" }
+         ]
+       }
+          ]
     });
 
     var largeInfowindow = new google.maps.InfoWindow();
@@ -73,7 +161,7 @@ function initMap() { //init map
             map: map,
             position: position,
             title: title,
-
+            icon:makeMarkerIcon(),
 
             animation: google.maps.Animation.DROP,
             id: i //i not 1
@@ -181,14 +269,14 @@ function populateInfoWindow(marker, infowindow) {
 }
 
 
-function makeMarkerIcon(markerColor) {
-    var markerImage = new google.maps.MarkerImage('img/map-marker.png',
+function makeMarkerIcon() {
+    var markerImage = new google.maps.MarkerImage('img/grey.png',
         // 'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + markerColor +
         // '|40|_|%E2%80%A2',
-        new google.maps.Size(26, 34),
+        new google.maps.Size(5, 5),
         new google.maps.Point(0, 0),
         new google.maps.Point(0, 0),
-        new google.maps.Size(26, 34));
+        new google.maps.Size(5, 5));
     return markerImage;
 };
 
@@ -214,7 +302,7 @@ function initEarthquake() {
         }
     };
 
-    xhr.open("get", "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson", true);
+    xhr.open("get", "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson", true);
     xhr.send(null);
 
 
