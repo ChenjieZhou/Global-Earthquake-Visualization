@@ -8,7 +8,7 @@ var earthquakesMarkers = [];
 function initMap() { //init map
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 37.4, lng: -121.8 },
-        zoom: 3
+        zoom: 2
     });
 
     var largeInfowindow = new google.maps.InfoWindow();
@@ -16,17 +16,32 @@ function initMap() { //init map
     var defaultIcon = makeMarkerIcon('FF4040');
     var highlightedIcon = makeMarkerIcon('00CD00');
 
-
+    earthquakes = initEarthquake();
     //var largeInfowindow = new google.maps.InfoWindow();
 
-    earthquakes = initEarthquake();
 
-
-    $(document).ready(function() {
-        $.getJSON('data/data.json', function(json) {
-            cities = json;
-        });
+    $.ajaxSetup({
+    async: false
     });
+    $.getJSON("data/cities.geojson", function(json) {
+      // console.log(json); // this will show the info it in firebug console
+      cities = json.features;
+    });
+
+
+    // console.log(cities)
+
+    // $.ajax({
+    //     async: false,
+    //     url: "data/worldcities.json",
+    //     success: function(json) {
+    //         cities = json;
+    //         console.log(json)
+    //     }
+    // });
+    // console.log(cities.length);
+
+
     // cities = [{ title: 'University of California, Santa Cruz', location: { lat: 36.9738893, lng: -122.0771595 } },
     //     { title: 'San Jose State University', location: { lat: 37.335103, lng: -121.877357 } },
     //     { title: 'Santa Clara University', location: { lat: 37.349649, lng: -121.939213 } },
@@ -38,35 +53,45 @@ function initMap() { //init map
     // ];
 
 
-    for (var i = 0; i < cities.length; i++) {
+    for (var i = 0; i < 10; i++) {
 
 
-        var position = cities[i].location;
-        var title = cities[i].title;
+        // var location = new Object();
+        // location.lat = parseInt(cities[i].lat);
+        // location.lng = parseInt(cities[i].lng);
+        var location = new Object();
+        location.lat = cities[i].geometry.coordinates[1];
+        location.lng = cities[i].geometry.coordinates[0];
+        var position = location;
+
+        var title = cities[i].properties.city;
 
         var cityMarker = new google.maps.Marker({
             map: map,
             position: position,
             title: title,
-            icon: defaultIcon,
+
+
             animation: google.maps.Animation.DROP,
             id: i //i not 1
         });
+
         citiesMarkers.push(cityMarker);
 
         cityMarker.addListener('click', function(){
+
             populateInfoWindow(this, largeInfowindow);
             this.setAnimation(google.maps.Animation.BOUNCE);
             stopAnimation(this);
         });
 
-        cityMarker.addListener('mouseover', function() {
-            this.setIcon(highlightedIcon);
-        });
-
-        cityMarker.addListener('mouseout', function() {
-            this.setIcon(defaultIcon);
-        });
+        // cityMarker.addListener('mouseover', function() {
+        //     this.setIcon(highlightedIcon);
+        // });
+        //
+        // cityMarker.addListener('mouseout', function() {
+        //     this.setIcon(defaultIcon);
+        // });
 
 
     };
@@ -74,7 +99,7 @@ function initMap() { //init map
 
     for (var i = 0; i < earthquakes.length; i++) {
 
-
+        console.log("earthquakeMarker Correct")
         var position = earthquakes[i].location;
         var title = earthquakes[i].title;
 
@@ -85,8 +110,8 @@ function initMap() { //init map
             map: map,
             position: position,
             title: title,
-            icon: defaultIcon,
-            animation: google.maps.Animation.DROP,
+            icon: cycleIcon(earthquakes[i].mag),
+            // animation: google.maps.Animation.DROP,
             id: i //i not 1
         });
 
@@ -97,17 +122,17 @@ function initMap() { //init map
             console.log(123);
             showImpactCities(this, citiesMarkers);
             populateInfoWindow(this, largeInfowindow);
-            this.setAnimation(google.maps.Animation.BOUNCE);
-            stopAnimation(this);
+            // this.setAnimation(google.maps.Animation.BOUNCE);
+            // stopAnimation(this);
         });
 
-        earthquakeMarker.addListener('mouseover', function() {
-            this.setIcon(cycleIcon(this.mag));
-        });
-
-        earthquakeMarker.addListener('mouseout', function() {
-            this.setIcon(defaultIcon);
-        });
+        // earthquakeMarker.addListener('mouseover', function() {
+        //     this.setIcon(cycleIcon(this.mag));
+        // });
+        //
+        // earthquakeMarker.addListener('mouseout', function() {
+        //     this.setIcon(defaultIcon);
+        // });
 
 
     }
@@ -157,7 +182,7 @@ function makeMarkerIcon(markerColor) {
         // '|40|_|%E2%80%A2',
         new google.maps.Size(26, 34),
         new google.maps.Point(0, 0),
-        new google.maps.Point(10, 34),
+        new google.maps.Point(0, 0),
         new google.maps.Size(26, 34));
     return markerImage;
 };
@@ -169,6 +194,9 @@ function stopAnimation(marker) {
         marker.setAnimation(null);
     }, 1500);
 };
+
+
+
 
 
 
@@ -209,7 +237,7 @@ function initEarthquake() {
         })(index);
     }
 
-    console.log(array);
+    // console.log(array);
     return array;
 };
 
@@ -228,8 +256,8 @@ function cycleIcon(magnitude) {
 function showImpactCities(earthquakeMarker, markers) {
     // var mygc = new google.maps.Geocoder();
 
-    console.log(earthquakeMarker)
-    console.log(markers)
+    // console.log(earthquakeMarker)
+    // console.log(markers)
     for (var i = 0; i < markers.length; i++) {
 
         var dis = google.maps.geometry.spherical.computeDistanceBetween(earthquakeMarker.getPosition(), markers[i].getPosition())
