@@ -23,24 +23,24 @@ for table in tables:
         start = 0
         detail = {}
         location = {}
-        country = ''
-        city = ''
+        country = ""
+        city = ""
         for td in tr.find_all('td'):
             if (start == 0):
-                location['lng'] = str(td.text)
+                location["lng"] = str(td.text)
                 print str(td.text)
 
             if (start == 1):
-                location['lat'] = td.text.decode('utf8')
+                location["lat"] = td.text.decode('utf8')
             if (start == 2):
                 city = td.text.decode('utf8')
             if (start == 4):
                 country = td.text.decode('utf8')
             start = start + 1
 
-        detail['location'] = location
-        detail['country'] = country
-        detail['city'] = city
+        detail["location"] = location
+        detail["country"] = country
+        detail["city"] = city
         data.append(detail)
 
 
@@ -53,7 +53,7 @@ file.write(str(data));
 file.close()
 pprint.pprint(data)
 # print data
->>>>>>> origin/master
+
 
 
 
