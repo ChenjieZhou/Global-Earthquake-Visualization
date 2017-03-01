@@ -3,6 +3,7 @@ var cities = [];
 var earthquakes = [];
 var citiesMarkers = [];
 var earthquakesMarkers = [];
+var ciryCircle;
 
 
 function initMap() { //init map
@@ -12,101 +13,72 @@ function initMap() { //init map
             lng: -121.8
         },
         //mapTypeId: 'satellite',
-        zoom: 2,
-        styles: [
-            {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
-            {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
-            {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
-            {
-              featureType: 'administrative.locality',
-              elementType: 'labels.text.fill',
-              stylers: [{color: '#d59563'}]
+        zoom: 3,
+        // disableDefaultUI: true,
+        styles: [{
+                "elementType": "labels",
+                "stylers": [{
+                    "visibility": "off"
+                }]
             },
             {
-              featureType: 'poi',
-              elementType: 'labels.text.fill',
-              stylers: [{color: '#d59563'}]
+                "featureType": "administrative.land_parcel",
+                "stylers": [{
+                    "visibility": "off"
+                }]
             },
             {
-              featureType: 'poi.park',
-              elementType: 'geometry',
-              stylers: [{color: '#263c3f'}]
+                "featureType": "administrative.neighborhood",
+                "stylers": [{
+                    "visibility": "off"
+                }]
             },
             {
-              featureType: 'poi.park',
-              elementType: 'labels.text.fill',
-              stylers: [{color: '#6b9a76'}]
+                "featureType": "poi",
+                "elementType": "labels.text",
+                "stylers": [{
+                    "visibility": "off"
+                }]
             },
             {
-              featureType: 'road',
-              elementType: 'geometry',
-              stylers: [{color: '#38414e'}]
+                "featureType": "poi.business",
+                "stylers": [{
+                    "visibility": "off"
+                }]
             },
             {
-              featureType: 'road',
-              elementType: 'geometry.stroke',
-              stylers: [{color: '#212a37'}]
+                "featureType": "road",
+                "stylers": [{
+                    "visibility": "off"
+                }]
             },
             {
-              featureType: 'road',
-              elementType: 'labels.text.fill',
-              stylers: [{color: '#9ca5b3'}]
+                "featureType": "road",
+                "elementType": "labels.icon",
+                "stylers": [{
+                    "visibility": "off"
+                }]
             },
             {
-              featureType: 'road.highway',
-              elementType: 'geometry',
-              stylers: [{color: '#746855'}]
-            },
-            {
-              featureType: 'road.highway',
-              elementType: 'geometry.stroke',
-              stylers: [{color: '#1f2835'}]
-            },
-            {
-              featureType: 'road.highway',
-              elementType: 'labels.text.fill',
-              stylers: [{color: '#f3d19c'}]
-            },
-            {
-              featureType: 'transit',
-              elementType: 'geometry',
-              stylers: [{color: '#2f3948'}]
-            },
-            {
-              featureType: 'transit.station',
-              elementType: 'labels.text.fill',
-              stylers: [{color: '#d59563'}]
-            },
-            {
-              featureType: 'water',
-              elementType: 'geometry',
-              stylers: [{color: '#17263c'}]
-            },
-            {
-              featureType: 'water',
-              elementType: 'labels.text.fill',
-              stylers: [{color: '#515c6d'}]
-            },
-            {
-              featureType: 'water',
-              elementType: 'labels.text.stroke',
-              stylers: [{color: '#17263c'}]
-            },
-            {
-         featureType: "administrative",
-         elementType: "labels",
-         stylers: [
-           { visibility: "off" }
-         ]
-       }
-          ]
+                "featureType": "transit",
+                "stylers": [{
+                    "visibility": "off"
+                }]
+            }
+        ]
     });
+
+
+
+
+
+
 
     var largeInfowindow = new google.maps.InfoWindow();
 
-    var defaultIcon = makeMarkerIcon('FF4040');
-    var highlightedIcon = makeMarkerIcon('00CD00');
-
+    // var defaultIcon = makeMarkerIcon('FF4040');
+    // var highlightedIcon = makeMarkerIcon('00CD00');
+    cityCircle = new google.maps.Circle();
     earthquakes = initEarthquake();
     //var largeInfowindow = new google.maps.InfoWindow();
 
@@ -158,10 +130,10 @@ function initMap() { //init map
         var title = cities[i].properties.city;
 
         var cityMarker = new google.maps.Marker({
-            map: map,
+            map: null,
             position: position,
             title: title,
-            icon:makeMarkerIcon(),
+            icon: makeMarkerIcon(),
 
             animation: google.maps.Animation.DROP,
             id: i //i not 1
@@ -201,7 +173,7 @@ function initMap() { //init map
             map: map,
             position: position,
             title: title,
-            icon: cycleIcon(earthquakes[i].mag),
+            icon: earthquakeIcon(earthquakes[i].mag),
             // animation: google.maps.Animation.DROP,
             id: i //i not 1
         });
@@ -211,9 +183,16 @@ function initMap() { //init map
 
         earthquakeMarker.addListener('click', function() {
             // console.log(123);
-            showAllMarkers();
+            showAllCitiesMarkers();
+            removeCircle();
+            hideOtherEarthquakesMarkers(this);
+
+            map.setZoom(4);
+            map.setCenter(this.getPosition());
+
             showImpactCities(this, citiesMarkers);
             populateInfoWindow(this, largeInfowindow);
+            getCircle(this, this.mag);
             // this.setAnimation(google.maps.Animation.BOUNCE);
             // stopAnimation(this);
         });
@@ -228,6 +207,19 @@ function initMap() { //init map
 
 
     }
+
+  
+
+
+    map.addListener('click', function() {
+      removeCircle();
+      hideAllCitiesMarkers();
+      showAllEarthquakesMarkers();
+      map.setZoom(3);
+    });
+
+
+
 
 };
 
@@ -270,13 +262,18 @@ function populateInfoWindow(marker, infowindow) {
 
 
 function makeMarkerIcon() {
-    var markerImage = new google.maps.MarkerImage('img/grey.png',
-        // 'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + markerColor +
-        // '|40|_|%E2%80%A2',
-        new google.maps.Size(5, 5),
-        new google.maps.Point(0, 0),
-        new google.maps.Point(0, 0),
-        new google.maps.Size(5, 5));
+    // var markerImage = new google.maps.MarkerImage('img/grey.png',
+    //     // 'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + markerColor +
+    //     // '|40|_|%E2%80%A2',
+    //     new google.maps.Size(5, 5),
+    //     new google.maps.Point(0, 0),
+    //     new google.maps.Point(0, 0),
+    //     new google.maps.Size(5, 5));
+    // return markerImage;
+    var markerImage = {
+        url: 'img/marker-red.png',
+        size: new google.maps.Size(40, 40),
+    };
     return markerImage;
 };
 
@@ -302,7 +299,7 @@ function initEarthquake() {
         }
     };
 
-    xhr.open("get", "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson", true);
+    xhr.open("get", "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson", true);
     xhr.send(null);
 
 
@@ -334,20 +331,92 @@ function initEarthquake() {
     return array;
 };
 
-function cycleIcon(magnitude) {
-    return {
-        path: google.maps.SymbolPath.CIRCLE,
-        fillColor: 'red',
-        fillOpacity: .2,
-        scale: Math.pow(2, magnitude) / 2,
-        strokeColor: 'white',
-        strokeWeight: .5
-    };
+// function cycleIcon(magnitude) {
+//     return {
+//         path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+//         fillColor: 'red',
+//         fillOpacity: .2,
+//         scale: Math.pow(2, magnitude) / 2,
+//         strokeColor: 'white',
+//         strokeWeight: 0
+//     };
+// };
+
+
+function earthquakeIcon(magnitude) {
+    if (magnitude < 2) {
+        var markerImage = {
+            url: 'http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_green.png',
+            size: new google.maps.Size(12, 20),
+            // origin: new google.maps.Point(6, 20),
+            // anchor: new google.maps.Point(17, 34),
+            // scaledSize: new google.maps.Size(25, 25)
+        };
+        return markerImage;
+
+    } else if (magnitude < 4) {
+        var markerImage = {
+            url: 'http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_yellow.png',
+            size: new google.maps.Size(12, 20),
+        };
+        return markerImage;
+    } else if (magnitude < 6) {
+        var markerImage = {
+            url: 'http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_orange.png',
+            size: new google.maps.Size(12, 20),
+
+        };
+        return markerImage;
+    } else {
+        var markerImage = {
+            url: 'http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_red.png',
+            size: new google.maps.Size(12, 20),
+        };
+        return markerImage;
+    }
 };
 
-function showAllMarkers() {
+
+function getCircle(marker, magnitude) {
+        cityCircle = new google.maps.Circle({
+        strokeColor: '#FF0000',
+        strokeOpacity: 0,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35,
+        map: map,
+        center: marker.position,
+        radius: 20 * Math.pow(1.8, (2 * magnitude - 5)) * 1000
+    });
+};
+
+function removeCircle(){
+  cityCircle.setMap(null)
+}
+
+function showAllCitiesMarkers() {
     for (var i = 0; i < citiesMarkers.length; i++) {
         citiesMarkers[i].setMap(map);
+    }
+};
+
+function hideAllCitiesMarkers() {
+  for (var i = 0; i < citiesMarkers.length; i++) {
+      citiesMarkers[i].setMap(null);
+  }
+};
+
+function showAllEarthquakesMarkers(){
+  for (var i = 0; i < earthquakesMarkers.length; i++) {
+      earthquakesMarkers[i].setMap(map);
+  }
+};
+
+function hideOtherEarthquakesMarkers(marker) {
+    for (var i = 0; i < earthquakesMarkers.length; i++) {
+        if (marker != earthquakesMarkers[i]) {
+            earthquakesMarkers[i].setMap(null);
+        }
     }
 };
 
