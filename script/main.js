@@ -13,8 +13,8 @@ function initMap() { //init map
 
     map = new google.maps.Map(document.getElementById('map'), {
         center: {
-            lat: 37.4,
-            lng: -121.8
+            lat: 13.8,
+            lng: 180
         },
         //mapTypeId: 'satellite',
         zoom: 3,
@@ -139,7 +139,7 @@ function initMap() { //init map
             title: title,
             icon: makeMarkerIcon(),
 
-            animation: google.maps.Animation.DROP,
+            //animation: google.maps.Animation.DROP,
             id: i //i not 1
         });
 
@@ -187,13 +187,14 @@ function initMap() { //init map
 
         earthquakeMarker.addListener('click', function() {
             // console.log(123);
-            showAllCitiesMarkers();
+
             removeCircle();
             hideOtherEarthquakesMarkers(this);
 
             map.setZoom(4);
             map.setCenter(this.getPosition());
 
+            showAllCitiesMarkers();
             showImpactCities(this, citiesMarkers);
             populateInfoWindow(this, largeInfowindow);
             getCircle(this, this.mag);
@@ -212,7 +213,7 @@ function initMap() { //init map
 
     }
 
-  
+
 
 
     map.addListener('click', function() {
@@ -220,7 +221,30 @@ function initMap() { //init map
       hideAllCitiesMarkers();
       showAllEarthquakesMarkers();
       map.setZoom(3);
+      map.setCenter({
+          lat: 13.8,
+          lng: 180
+      });
     });
+
+    $(document).ready(function() {
+        $("#btn1").click(function() {
+            showMag5();
+        });
+        $("#btn2").click(function() {
+            showMag55();
+        });
+        $("#btn3").click(function() {
+           showMag6();
+        });
+        $("#btn4").click(function() {
+            showMag65();
+        });
+        $("#btn5").click(function() {
+            showAllEarthquakesMarkers();
+        });
+    });
+
 
 
 
@@ -264,34 +288,23 @@ function populateInfoWindow(marker, infowindow) {
     });
 }
 
-
 function makeMarkerIcon() {
     // var markerImage = new google.maps.MarkerImage('img/grey.png',
     //     // 'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + markerColor +
     //     // '|40|_|%E2%80%A2',
-    //     new google.maps.Size(5, 5),
-    //     new google.maps.Point(0, 0),
-    //     new google.maps.Point(0, 0),
-    //     new google.maps.Size(5, 5));
-    // return markerImage;
+
     var markerImage = {
-        url: 'img/marker-red.png',
-        size: new google.maps.Size(40, 40),
+        url: 'img/city-marker.png',
+        size: new google.maps.Size(30, 30),
     };
     return markerImage;
 };
-
-
 
 function stopAnimation(marker) {
     setTimeout(function() {
         marker.setAnimation(null);
     }, 1500);
 };
-
-
-
-
 
 
 function initEarthquake() {
@@ -345,9 +358,8 @@ function initEarthquake() {
 //     };
 // };
 
-
 function earthquakeIcon(magnitude) {
-    if (magnitude < 2) {
+    if (magnitude < 5) {
         var markerImage = {
             url: 'http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_green.png',
             size: new google.maps.Size(12, 20),
@@ -357,7 +369,7 @@ function earthquakeIcon(magnitude) {
         };
         return markerImage;
 
-    } else if (magnitude < 4) {
+    } else if (magnitude < 5.5) {
         var markerImage = {
             url: 'http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_yellow.png',
             size: new google.maps.Size(12, 20),
@@ -378,7 +390,6 @@ function earthquakeIcon(magnitude) {
         return markerImage;
     }
 };
-
 
 function getCircle(marker, magnitude) {
         cityCircle = new google.maps.Circle({
@@ -423,8 +434,6 @@ function hideOtherEarthquakesMarkers(marker) {
     }
 };
 
-
-
 function showImpactCities(earthquakeMarker, markers) {
     // var mygc = new google.maps.Geocoder();
 
@@ -436,9 +445,51 @@ function showImpactCities(earthquakeMarker, markers) {
         // console.log(dis);
         // console.log(earthquakeMarker.mag)
         var impactDis = 20 * Math.pow(1.8, (2 * earthquakeMarker.mag - 5)) * 1000;
-        // console.log(impactDis)
+        //console.log(impactDis)
         if (dis > impactDis) {
             markers[i].setMap(null);
         };
     }
+};
+
+
+//Panel function
+function showMag5(){
+  for (var i = 0; i < earthquakesMarkers.length; i++) {
+      if(earthquakesMarkers[i].mag < 5) {
+          earthquakesMarkers[i].setMap(map);
+      } else {
+        earthquakesMarkers[i].setMap(null);
+      }
+  }
+};
+
+function showMag55(){
+  for (var i = 0; i < earthquakesMarkers.length; i++) {
+      if(earthquakesMarkers[i].mag >= 5 && earthquakesMarkers[i].mag < 5.5) {
+          earthquakesMarkers[i].setMap(map);
+      } else {
+        earthquakesMarkers[i].setMap(null);
+      }
+  }
+};
+
+function showMag6(){
+  for (var i = 0; i < earthquakesMarkers.length; i++) {
+      if(earthquakesMarkers[i].mag >= 5.5 && earthquakesMarkers[i].mag < 6) {
+          earthquakesMarkers[i].setMap(map);
+      } else {
+        earthquakesMarkers[i].setMap(null);
+      }
+  }
+};
+
+function showMag65(){
+  for (var i = 0; i < earthquakesMarkers.length; i++) {
+      if(earthquakesMarkers[i].mag >= 6) {
+          earthquakesMarkers[i].setMap(map);
+      } else {
+        earthquakesMarkers[i].setMap(null);
+      }
+  }
 };
