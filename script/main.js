@@ -6,6 +6,10 @@ var earthquakesMarkers = [];
 
 
 function initMap() { //init map
+
+
+
+
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 37.4, lng: -121.8 },
         zoom: 3
@@ -165,15 +169,14 @@ function initEarthquake() {
     xhr = new XMLHttpRequest();
     xhr.onload = function() {
         if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
-            sessionStorage.res = xhr.responseText;
+            localStorage.res = xhr.responseText;
         }
     };
 
     xhr.open("get", "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson", true);
     xhr.send(null);
 
-
-    var JSONres = JSON.parse(sessionStorage.res);
+    var JSONres = JSON.parse(localStorage.res);
 
 
     var array = new Array(JSONres.features.length);
