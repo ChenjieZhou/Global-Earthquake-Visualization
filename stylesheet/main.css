@@ -1,3 +1,7 @@
+body::-webkit-scrollbar-thumb {
+		  background-color: #262a30;
+	}
+
 #map {
   height: 800px;
 }
@@ -13,6 +17,8 @@ html, body {
   padding: 0;
 }
 
+
+
 .side-bar{
   height: 800px;
   background-color: #262a30;
@@ -27,4 +33,10 @@ h4{
 .my-btn-group{
   margin-top: 10px;
   margin-left: 40px;
+}
+
+.city-list{
+  padding-top: 10px;
+  height:300px;
+  overflow-y: scroll;
 }

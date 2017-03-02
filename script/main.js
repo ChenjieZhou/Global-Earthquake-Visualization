@@ -190,14 +190,15 @@ function initMap() { //init map
 
             removeCircle();
             hideOtherEarthquakesMarkers(this);
-
+            removeCityList();
             map.setZoom(4);
             map.setCenter(this.getPosition());
 
-            showAllCitiesMarkers();
+            hideAllCitiesMarkers();
             showImpactCities(this, citiesMarkers);
             populateInfoWindow(this, largeInfowindow);
             getCircle(this, this.mag);
+
             // this.setAnimation(google.maps.Animation.BOUNCE);
             // stopAnimation(this);
         });
@@ -220,6 +221,7 @@ function initMap() { //init map
       removeCircle();
       hideAllCitiesMarkers();
       showAllEarthquakesMarkers();
+      removeCityList();
       map.setZoom(3);
       map.setCenter({
           lat: 13.8,
@@ -446,12 +448,21 @@ function showImpactCities(earthquakeMarker, markers) {
         // console.log(earthquakeMarker.mag)
         var impactDis = 20 * Math.pow(1.8, (2 * earthquakeMarker.mag - 5)) * 1000;
         //console.log(impactDis)
-        if (dis > impactDis) {
-            markers[i].setMap(null);
+        if (dis <= impactDis) {
+            markers[i].setMap(map);
+            showCityList(markers[i]);
         };
     }
 };
 
+
+function showCityList(marker) {
+  $('.list-group').append('<a href="" class="list-group-item">'+ marker.title + '</a>');
+}
+
+function removeCityList(){
+  $('.list-group-item').remove();
+}
 
 //Panel function
 function showMag5(){
