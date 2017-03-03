@@ -260,13 +260,17 @@ function initMap() { //init map
 
 
 
+
+
+
+
 function populateInfoWindow(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
 
     var wikiurl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title + '&format=json&callback=wikiCallback';
     $.ajax({
         url: wikiurl,
-        dataType: "jsonp",
+        dataType: "json",
         timout: 8000
     }).fail(function() {
         infowindow.setContent('<div>' + 'Please Check Your Connection' + '</div>');
@@ -327,7 +331,6 @@ function initEarthquake() {
     xhr.send(null);
 
     var JSONres = JSON.parse(localStorage.res);
-
 
     var array = new Array(JSONres.features.length);
     for (var index in JSONres.features) {
@@ -398,6 +401,149 @@ function earthquakeIcon(magnitude) {
         return markerImage;
     }
 };
+
+
+
+function synAjaxFuntion(url) {
+  var res;
+  var XHR = new XMLHttpRequest();
+  XHR.open("get", url , false);
+  XHR.send(null);
+  if ( XHR.status >= 200 && XHR.status <= 300 || XHR.status == 304) {
+    res = XHR.responseText;
+  }
+  return JSON.parse(res);
+}
+
+
+
+
+function showPeople(marker) {
+  var felt = marker.felt;
+  if (felt == null) {
+    return null;
+  }
+  var tempRes = synAjaxFuntion(marker.url);
+  var geoJson = "dyfi_geo_10km.geojson";
+  var res = tempRes.properties.products.dyfi.contents.genJson.url;
+  var array = synAjaxFuntion(res);
+  console.log(array)
+}
+
+function synAjaxFuntion(url) {
+  var res;
+  var XHR = new XMLHttpRequest();
+  XHR.open("get", url , false);
+  XHR.send(null);
+  if ( XHR.status >= 200 && XHR.status <= 300 || XHR.status == 304) {
+    res = XHR.responseText;
+  }
+  var jsonRes = JSON.parse(res)
+  console.log(jsonRes);
+  return jsonRes;
+}
+
+//getMarkerArray
+function getMarkerArray(marker) {
+  if (marker.felt == null) {
+    return null;
+  }
+    var array;
+    // console.log(response.features[index].properties.detail);
+    $.ajax({
+      url: marker.detail,
+      dataType:"json"
+    }).done(function (response) {
+      var geoJson = "dyfi_geo_10km.geojson";
+      // console.log(response);
+      // console.log(response.properties.products.dyfi[0].contents["dyfi_geo_10km.geojson"].url);
+      // var temp
+      // console.log(JSON.stringify(response.properties.products.dyfi[0].contents));
+      $.ajax({
+        url:response.properties.products.dyfi[0].contents["dyfi_geo_10km.geojson"].url,
+        dataType:"json"
+      }).done(function (response){
+        // console.log(response);
+        console.log(response.features);
+        var array = new Array(response.features.length);
+        for (var index in response.features) {
+          (function(index) {
+            var newObejct = {
+                properties: response.features[index].properties,
+                square: [{
+                    lat: response.features[index].geometry.coordinates[0][0][1],
+                    lng: response.features[index].geometry.coordinates[0][0][0]
+                },
+                {
+                  lat: response.features[index].geometry.coordinates[0][1][1],
+                  lng: response.features[index].geometry.coordinates[0][1][0]
+                },
+                {
+                  lat: response.features[index].geometry.coordinates[0][2][1],
+                  lng: response.features[index].geometry.coordinates[0][2][0]
+                },
+                {
+                  lat: response.features[index].geometry.coordinates[0][3][1],
+                  lng: response.features[index].geometry.coordinates[0][3][0]
+                }]
+
+            };
+            array[index] = newObejct;
+        })(index);
+        }
+        // console.log(array);
+      });
+    });
+  return array;
+
+}
+
+
+
+
+function getCircle(marker, magnitude) {
+        cityCircle = new google.maps.Circle({
+        strokeColor: '#FF0000',
+        strokeOpacity: 0,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35,
+        map: map,
+        center: marker.position,
+        radius: 20 * Math.pow(1.8, (2 * magnitude - 5)) * 1000
+    });
+};
+
+function removeCircle(){
+  cityCircle.setMap(null)
+}
+
+function showAllCitiesMarkers() {
+    for (var i = 0; i < citiesMarkers.length; i++) {
+        citiesMarkers[i].setMap(map);
+    }
+};
+
+function hideAllCitiesMarkers() {
+  for (var i = 0; i < citiesMarkers.length; i++) {
+      citiesMarkers[i].setMap(null);
+  }
+};
+
+function showAllEarthquakesMarkers(){
+  for (var i = 0; i < earthquakesMarkers.length; i++) {
+      earthquakesMarkers[i].setMap(map);
+  }
+};
+
+function hideOtherEarthquakesMarkers(marker) {
+    for (var i = 0; i < earthquakesMarkers.length; i++) {
+        if (marker != earthquakesMarkers[i]) {
+            earthquakesMarkers[i].setMap(null);
+        }
+    }
+};
+
 
 function getCircle(marker, magnitude) {
         cityCircle = new google.maps.Circle({
