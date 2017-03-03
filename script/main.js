@@ -96,6 +96,8 @@ function initMap() { //init map
     });
 
 
+
+
     // console.log(cities)
 
     // $.ajax({
@@ -173,6 +175,8 @@ function initMap() { //init map
 
         var earthquakeMarker = new google.maps.Marker({
             mag: earthquakes[i].mag,
+            felt : earthquakes[i].felt,
+            urlLink : earthquakes[i].url,
             depth: earthquakes[i].depth,
             map: map,
             position: position,
@@ -187,6 +191,7 @@ function initMap() { //init map
 
         earthquakeMarker.addListener('click', function() {
             // console.log(123);
+            showPeople(this);
 
             removeCircle();
             hideOtherEarthquakesMarkers(this);
@@ -339,7 +344,8 @@ function initEarthquake() {
                 depth: JSONres.features[index].geometry.coordinates[2],
                 mag: JSONres.features[index].properties.mag,
                 tsunami: JSONres.features[index].properties.tsunami,
-                felt: JSONres.features[index].properties.felt
+                felt: JSONres.features[index].properties.felt,
+                url: JSONres.features[index].properties.url
             };
             array[index] = newObejct;
         })(index);
@@ -402,7 +408,7 @@ function getCircle(marker, magnitude) {
         fillOpacity: 0.35,
         map: map,
         center: marker.position,
-        radius: 20 * Math.pow(1.8, (2 * magnitude - 5)) * 1000
+        radius: (20 * Math.pow(1.8, (2 * magnitude - 5))*1000)/1.60934
     });
 };
 
@@ -446,7 +452,7 @@ function showImpactCities(earthquakeMarker, markers) {
         var dis = google.maps.geometry.spherical.computeDistanceBetween(earthquakeMarker.getPosition(), markers[i].getPosition())
         // console.log(dis);
         // console.log(earthquakeMarker.mag)
-        var impactDis = 20 * Math.pow(1.8, (2 * earthquakeMarker.mag - 5)) * 1000;
+        var impactDis = (20 * Math.pow(1.8, (2 * earthquakeMarker.mag - 5))*1000)/1.60934;
         //console.log(impactDis)
         if (dis <= impactDis) {
             markers[i].setMap(map);
@@ -503,4 +509,30 @@ function showMag65(){
         earthquakesMarkers[i].setMap(null);
       }
   }
+};
+
+
+
+function synAjaxFuntion(url) {
+  var res;
+  var XHR = new XMLHttpRequest();
+  XHR.open("get", url , false);
+  XHR.send(null);
+  if ( XHR.status >= 200 && XHR.status <= 300 || XHR.status == 304) {
+    res = XHR.responseText;
+  }
+  return res;
+}
+
+
+function showPeople(marker) {
+  var felt = marker.felt;
+  if (felt == null) {
+    return null;
+  }
+  var tempRes = synAjaxFuntion(marker.urlLink);
+  var geoJson = "dyfi_geo_10km.geojson";
+  res = tempRes.properties;
+  var array = synAjaxFuntion(res);
+  console.log(array)
 };
