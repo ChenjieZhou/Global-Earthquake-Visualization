@@ -118,7 +118,7 @@ function populateInfoWindow(marker, infowindow) {
     var wikiurl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title + '&format=json&callback=wikiCallback';
     $.ajax({
         url: wikiurl,
-        dataType: "jsonp",
+        dataType: "json",
         timout: 8000
     }).fail(function() {
         infowindow.setContent('<div>' + 'Please Check Your Connection' + '</div>');
@@ -214,8 +214,10 @@ function synAjaxFuntion(url) {
   if ( XHR.status >= 200 && XHR.status <= 300 || XHR.status == 304) {
     res = XHR.responseText;
   }
-  return res;
+  return JSON.parse(res);
 }
+
+
 
 
 function showPeople(marker) {
@@ -225,9 +227,77 @@ function showPeople(marker) {
   }
   var tempRes = synAjaxFuntion(marker.url);
   var geoJson = "dyfi_geo_10km.geojson";
-  res = tempRes.properties.products.dyfi.contents.genJson.url;
-  var array = synAjaxFuntion(url);
+  var res = tempRes.properties.products.dyfi.contents.genJson.url;
+  var array = synAjaxFuntion(res);
   console.log(array)
+}
+
+function synAjaxFuntion(url) {
+  var res;
+  var XHR = new XMLHttpRequest();
+  XHR.open("get", url , false);
+  XHR.send(null);
+  if ( XHR.status >= 200 && XHR.status <= 300 || XHR.status == 304) {
+    res = XHR.responseText;
+  }
+  var jsonRes = JSON.parse(res)
+  console.log(jsonRes);
+  return jsonRes;
+}
+
+//getMarkerArray
+function getMarkerArray(marker) {
+  if (marker.felt == null) {
+    return null;
+  }
+    var array;
+    // console.log(response.features[index].properties.detail);
+    $.ajax({
+      url: marker.detail,
+      dataType:"json"
+    }).done(function (response) {
+      var geoJson = "dyfi_geo_10km.geojson";
+      // console.log(response);
+      // console.log(response.properties.products.dyfi[0].contents["dyfi_geo_10km.geojson"].url);
+      // var temp
+      // console.log(JSON.stringify(response.properties.products.dyfi[0].contents));
+      $.ajax({
+        url:response.properties.products.dyfi[0].contents["dyfi_geo_10km.geojson"].url,
+        dataType:"json"
+      }).done(function (response){
+        // console.log(response);
+        console.log(response.features);
+        var array = new Array(response.features.length);
+        for (var index in response.features) {
+          (function(index) {
+            var newObejct = {
+                properties: response.features[index].properties,
+                square: [{
+                    lat: response.features[index].geometry.coordinates[0][0][1],
+                    lng: response.features[index].geometry.coordinates[0][0][0]
+                },
+                {
+                  lat: response.features[index].geometry.coordinates[0][1][1],
+                  lng: response.features[index].geometry.coordinates[0][1][0]
+                },
+                {
+                  lat: response.features[index].geometry.coordinates[0][2][1],
+                  lng: response.features[index].geometry.coordinates[0][2][0]
+                },
+                {
+                  lat: response.features[index].geometry.coordinates[0][3][1],
+                  lng: response.features[index].geometry.coordinates[0][3][0]
+                }]
+
+            };
+            array[index] = newObejct;
+        })(index);
+        }
+        // console.log(array);
+      });
+    });
+  return array;
+
 }
 
 
