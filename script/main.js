@@ -396,7 +396,7 @@ function earthquakeIcon(magnitude) {
     }
 };
 
-<<<<<<< HEAD
+
 function synAjaxFuntion(url) {
   var res;
   var XHR = new XMLHttpRequest();
@@ -494,7 +494,7 @@ function getMarkerArray(marker) {
 
 
 
-=======
+
 function getCircle(marker, magnitude) {
         cityCircle = new google.maps.Circle({
         strokeColor: '#FF0000',
@@ -537,7 +537,6 @@ function hideOtherEarthquakesMarkers(marker) {
         }
     }
 };
->>>>>>> starsyork/master
 
 function showImpactCities(earthquakeMarker, markers) {
     // var mygc = new google.maps.Geocoder();
