@@ -1,19 +1,51 @@
 <!doctype html>
 <html>
+
 <head>
-<meta charset="UTF-8">
-<script src="script/libs/jquery-3.1.1.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmk2e7mpwBDhqjS73-7lTaCGMY-sZo_1M&libraries=geometry"></script>
-<script src="script/main.js"></script>
-<link rel="stylesheet" type="text/css" href="stylesheet/main.css">
-<title>Untitled Document</title>
+    <meta charset="UTF-8">
+    <script src="script/libs/jquery-3.1.1.js"></script>
+
+    <script src="script/main.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmk2e7mpwBDhqjS73-7lTaCGMY-sZo_1M&libraries=geometry&callback=initMap"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="stylesheet/main.css">
+    <title>Global Earthquakes</title>
 </head>
 
 <body>
-  <div id="map"></div>
-  <!-- Replace the value of the key parameter with your own API key. -->
-  <script async defer
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmk2e7mpwBDhqjS73-7lTaCGMY-sZo_1M&callback=initMap">
-  </script>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="side-bar">
+                    <h4>Earthquake Filter</h4>
+                    <div class="btn-group btn-group-sm my-btn-group" role="group" aria-label="Basic example">
+                        <button id="btn1" type="button" class="btn btn-secondary" style="background-color:rgb(101, 216, 102)">4.5-5</button>
+                        <button id="btn2" type="button" class="btn btn-secondary" style="background-color:rgb(244, 244, 108)">5-5.5</button>
+                        <button id="btn3" type="button" class="btn btn-secondary" style="background-color:rgb(241, 197, 46)">5.5-6</button>
+                        <button id="btn4" type="button" class="btn btn-secondary" style="background-color:rgb(253, 70, 86)">&gt; 6 </button>
+                        <button id="btn5" type="button" class="btn btn-secondary">All</button>
+                    </div>
+                    <h4>Possiblly Felt Cities</h4>
+                    <div class="city-list">
+                    <div class="list-group">
+                        
+
+
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div id="map"></div>
+            </div>
+        </div>
+
+    </div>
+
+
+
 </body>
+
 </html>
