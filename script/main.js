@@ -397,6 +397,7 @@ function earthquakeIcon(magnitude) {
 };
 
 
+
 function synAjaxFuntion(url) {
   var res;
   var XHR = new XMLHttpRequest();
@@ -493,6 +494,49 @@ function getMarkerArray(marker) {
 
 
 
+
+function getCircle(marker, magnitude) {
+        cityCircle = new google.maps.Circle({
+        strokeColor: '#FF0000',
+        strokeOpacity: 0,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35,
+        map: map,
+        center: marker.position,
+        radius: 20 * Math.pow(1.8, (2 * magnitude - 5)) * 1000
+    });
+};
+
+function removeCircle(){
+  cityCircle.setMap(null)
+}
+
+function showAllCitiesMarkers() {
+    for (var i = 0; i < citiesMarkers.length; i++) {
+        citiesMarkers[i].setMap(map);
+    }
+};
+
+function hideAllCitiesMarkers() {
+  for (var i = 0; i < citiesMarkers.length; i++) {
+      citiesMarkers[i].setMap(null);
+  }
+};
+
+function showAllEarthquakesMarkers(){
+  for (var i = 0; i < earthquakesMarkers.length; i++) {
+      earthquakesMarkers[i].setMap(map);
+  }
+};
+
+function hideOtherEarthquakesMarkers(marker) {
+    for (var i = 0; i < earthquakesMarkers.length; i++) {
+        if (marker != earthquakesMarkers[i]) {
+            earthquakesMarkers[i].setMap(null);
+        }
+    }
+};
 
 
 function getCircle(marker, magnitude) {
