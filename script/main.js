@@ -108,6 +108,10 @@ function initMap() { //init map
 
 
 
+
+
+
+
 function populateInfoWindow(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
 
@@ -178,7 +182,6 @@ function initEarthquake() {
 
     var JSONres = JSON.parse(localStorage.res);
 
-
     var array = new Array(JSONres.features.length);
     for (var index in JSONres.features) {
         // alert(o);
@@ -201,6 +204,33 @@ function initEarthquake() {
     console.log(array);
     return array;
 };
+
+
+function synAjaxFuntion(url) {
+  var res;
+  var XHR = new XMLHttpRequest();
+  XHR.open("get", url , false);
+  XHR.send(null);
+  if ( XHR.status >= 200 && XHR.status <= 300 || XHR.status == 304) {
+    res = XHR.responseText;
+  }
+  return res;
+}
+
+
+function showPeople(marker) {
+  var felt = marker.felt;
+  if (felt == null) {
+    return null;
+  }
+  var tempRes = synAjaxFuntion(marker.url);
+  var geoJson = "dyfi_geo_10km.geojson";
+  res = tempRes.properties.products.dyfi.contents.genJson.url;
+  var array = synAjaxFuntion(url);
+  console.log(array)
+}
+
+
 
 
 
