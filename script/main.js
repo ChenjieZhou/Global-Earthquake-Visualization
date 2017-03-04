@@ -173,6 +173,8 @@ function initMap() { //init map
 
         var earthquakeMarker = new google.maps.Marker({
             mag: earthquakes[i].mag,
+            felt : earthquakes[i].felt,
+            urlLink : earthquakes[i].url,
             depth: earthquakes[i].depth,
             map: map,
             position: position,
@@ -186,7 +188,8 @@ function initMap() { //init map
         earthquakesMarkers.push(earthquakeMarker);
 
         earthquakeMarker.addListener('click', function() {
-            // console.log(123);
+
+            showPeople(this);
 
             removeCircle();
             hideOtherEarthquakesMarkers(this);
@@ -342,7 +345,12 @@ function initEarthquake() {
                 depth: JSONres.features[index].geometry.coordinates[2],
                 mag: JSONres.features[index].properties.mag,
                 tsunami: JSONres.features[index].properties.tsunami,
-                felt: JSONres.features[index].properties.felt
+
+                // felt: JSONres.features[index].properties.felt
+
+                felt: JSONres.features[index].properties.felt,
+                url: JSONres.features[index].properties.url
+
             };
             array[index] = newObejct;
         })(index);
@@ -493,6 +501,48 @@ function getMarkerArray(marker) {
 
 
 
+function getCircle(marker, magnitude) {
+        cityCircle = new google.maps.Circle({
+        strokeColor: '#FF0000',
+        strokeOpacity: 0,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35,
+        map: map,
+        center: marker.position,
+        radius: (20 * Math.pow(1.8, (2 * magnitude - 5))*1000)/1.60934
+    });
+};
+
+function removeCircle(){
+  cityCircle.setMap(null)
+}
+
+function showAllCitiesMarkers() {
+    for (var i = 0; i < citiesMarkers.length; i++) {
+        citiesMarkers[i].setMap(map);
+    }
+};
+
+function hideAllCitiesMarkers() {
+  for (var i = 0; i < citiesMarkers.length; i++) {
+      citiesMarkers[i].setMap(null);
+  }
+};
+
+function showAllEarthquakesMarkers(){
+  for (var i = 0; i < earthquakesMarkers.length; i++) {
+      earthquakesMarkers[i].setMap(map);
+  }
+};
+
+function hideOtherEarthquakesMarkers(marker) {
+    for (var i = 0; i < earthquakesMarkers.length; i++) {
+        if (marker != earthquakesMarkers[i]) {
+            earthquakesMarkers[i].setMap(null);
+        }
+    }
+};
 
 
 function getCircle(marker, magnitude) {
@@ -549,6 +599,7 @@ function showImpactCities(earthquakeMarker, markers) {
         // console.log(dis);
         // console.log(earthquakeMarker.mag)
         var impactDis = 20 * Math.pow(1.8, (2 * earthquakeMarker.mag - 5)) * 1000;
+        var impactDis = (20 * Math.pow(1.8, (2 * earthquakeMarker.mag - 5))*1000)/1.60934;
         //console.log(impactDis)
         if (dis <= impactDis) {
             markers[i].setMap(map);
@@ -605,4 +656,30 @@ function showMag65(){
         earthquakesMarkers[i].setMap(null);
       }
   }
+};
+
+
+
+function synAjaxFuntion(url) {
+  var res;
+  var XHR = new XMLHttpRequest();
+  XHR.open("get", url , false);
+  XHR.send(null);
+  if ( XHR.status >= 200 && XHR.status <= 300 || XHR.status == 304) {
+    res = XHR.responseText;
+  }
+  return res;
+}
+
+
+function showPeople(marker) {
+  var felt = marker.felt;
+  if (felt == null) {
+    return null;
+  }
+  var tempRes = synAjaxFuntion(marker.urlLink);
+  var geoJson = "dyfi_geo_10km.geojson";
+  res = tempRes.properties;
+  var array = synAjaxFuntion(res);
+  console.log(array)
 };
