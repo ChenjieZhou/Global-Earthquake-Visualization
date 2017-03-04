@@ -95,7 +95,6 @@ function initMap() { //init map
     });
 
 
-<<<<<<< HEAD
     // console.log(cities)
 
     // $.ajax({
@@ -120,8 +119,7 @@ function initMap() { //init map
     // ];
 
 
-=======
->>>>>>> starsyork/master
+
     for (var i = 0; i < cities.length; i++) {
 
 
@@ -175,13 +173,12 @@ function initMap() { //init map
 
         var earthquakeMarker = new google.maps.Marker({
             mag: earthquakes[i].mag,
-<<<<<<< HEAD
+
             felt : earthquakes[i].felt,
             urlLink : earthquakes[i].url,
-=======
+
             felt: earthquakes[i].felt,
             urlLink: earthquakes[i].url,
->>>>>>> starsyork/master
             depth: earthquakes[i].depth,
             map: map,
             position: position,
@@ -195,13 +192,10 @@ function initMap() { //init map
         earthquakesMarkers.push(earthquakeMarker);
 
         earthquakeMarker.addListener('click', function() {
-<<<<<<< HEAD
 
             showPeople(this);
-=======
             // console.log(123);
             var reports = getReportArray(this);
->>>>>>> starsyork/master
 
 
             removeReports();
@@ -353,17 +347,15 @@ function initEarthquake() {
                 depth: JSONres.features[index].geometry.coordinates[2],
                 mag: JSONres.features[index].properties.mag,
                 tsunami: JSONres.features[index].properties.tsunami,
-<<<<<<< HEAD
 
                 // felt: JSONres.features[index].properties.felt
 
-                felt: JSONres.features[index].properties.felt,
-                url: JSONres.features[index].properties.url
+                // felt: JSONres.features[index].properties.felt,
+                // url: JSONres.features[index].properties.url
 
-=======
+
                 felt: JSONres.features[index].properties.felt,
                 url: JSONres.features[index].properties.detail
->>>>>>> starsyork/master
             };
             array[index] = newObejct;
         })(index);
@@ -417,7 +409,6 @@ function earthquakeIcon(magnitude) {
     }
 };
 
-<<<<<<< HEAD
 
 function synAjaxFuntion(url) {
   var res;
@@ -532,8 +523,7 @@ function removeCircle(){
   cityCircle.setMap(null)
 }
 
-=======
->>>>>>> starsyork/master
+
 function showAllCitiesMarkers() {
     for (var i = 0; i < citiesMarkers.length; i++) {
         citiesMarkers[i].setMap(map);
@@ -618,12 +608,10 @@ function showImpactCities(earthquakeMarker, markers) {
         var dis = google.maps.geometry.spherical.computeDistanceBetween(earthquakeMarker.getPosition(), markers[i].getPosition())
         // console.log(dis);
         // console.log(earthquakeMarker.mag)
-<<<<<<< HEAD
         var impactDis = 20 * Math.pow(1.8, (2 * earthquakeMarker.mag - 5)) * 1000;
         var impactDis = (20 * Math.pow(1.8, (2 * earthquakeMarker.mag - 5))*1000)/1.60934;
-=======
+
         var impactDis = (20 * Math.pow(1.8, (2 * earthquakeMarker.mag - 5)) * 1000) / 1.60934;
->>>>>>> starsyork/master
         //console.log(impactDis)
         if (dis <= impactDis) {
             markers[i].setMap(map);
@@ -757,36 +745,36 @@ function showReports(reports){
   if (reports != null) {
     for (var i = 0; i < reports.length; i++) {
 
-      var corrds = reports[i].square;
-      reportSquare[i] = new google.maps.Polygon({
-        paths: corrds,
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#FF0000',
-        fillOpacity: 0.35
-      });
-      reportSquare[i].setMap(map);
-      var tmp = reports[i];
+      (function () {
+        var corrds = reports[i].square;
+        reportSquare[i] = new google.maps.Polygon({
+          paths: corrds,
+          strokeColor: '#FF0000',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#FF0000',
+          fillOpacity: 0.35
+        });
+        reportSquare[i].setMap(map);
+        var tmp = reports[i];
 
 
-      reportSquare[i].addListener('mouseover', function() {
-        console.log(tmp);
-          showReportList(tmp);
+        reportSquare[i].addListener('mouseover', function() {
+          console.log(tmp);
+            showReportList(tmp);
 
-      });
+        });
 
-      reportSquare[i].addListener('mouseout', function() {
-        removeReportList();
-      });
+        reportSquare[i].addListener('mouseout', function() {
+          removeReportList();
+        });
+      })();
+
 
     };
   };
 
 };
-<<<<<<< HEAD
-=======
-
 function removeReports(){
 
   for (var i = 0; i < reportSquare.length; i++) {
@@ -802,4 +790,3 @@ function showReportList(marker) {
 function removeReportList() {
     $('.list-group-report').remove();
 }
->>>>>>> starsyork/master
