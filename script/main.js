@@ -4,11 +4,13 @@ var earthquakes = [];
 var citiesMarkers = [];
 var earthquakesMarkers = [];
 var ciryCircle;
+var reportSquare = [];
+
+
+
 
 
 function initMap() { //init map
-
-
 
 
     map = new google.maps.Map(document.getElementById('map'), {
@@ -74,15 +76,12 @@ function initMap() { //init map
 
 
 
-
-
-
-
     var largeInfowindow = new google.maps.InfoWindow();
-
+    reportInfoWindow= new google.maps.InfoWindow();
     // var defaultIcon = makeMarkerIcon('FF4040');
     // var highlightedIcon = makeMarkerIcon('00CD00');
     cityCircle = new google.maps.Circle();
+    reportSquare[0] = new google.maps.Polygon();
     earthquakes = initEarthquake();
     //var largeInfowindow = new google.maps.InfoWindow();
 
@@ -94,32 +93,6 @@ function initMap() { //init map
         // console.log(json); // this will show the info it in firebug console
         cities = json.features;
     });
-
-
-
-
-    // console.log(cities)
-
-    // $.ajax({
-    //     async: false,
-    //     url: "data/worldcities.json",
-    //     success: function(json) {
-    //         cities = json;
-    //         console.log(json)
-    //     }
-    // });
-    // console.log(cities.length);
-
-
-    // cities = [{ title: 'University of California, Santa Cruz', location: { lat: 36.9738893, lng: -122.0771595 } },
-    //     { title: 'San Jose State University', location: { lat: 37.335103, lng: -121.877357 } },
-    //     { title: 'Santa Clara University', location: { lat: 37.349649, lng: -121.939213 } },
-    //     { title: 'University of San Francisco', location: { lat: 37.776632, lng: -122.450864 } },
-    //     { title: 'University of California, Berkeley', location: { lat: 37.871467, lng: -122.258915 } },
-    //     { title: 'Stanford University', location: { lat: 37.426385, lng: -122.168552 } },
-    //     { title: 'Northeastern University Silicon Valley', location: { lat: 37.256893, lng: -121.787221 } },
-    //     { title: 'Carnegie Mellon University - Silicon Valley', location: { lat: 37.410445, lng: -122.059858 } },
-    // ];
 
 
     for (var i = 0; i < cities.length; i++) {
@@ -175,8 +148,8 @@ function initMap() { //init map
 
         var earthquakeMarker = new google.maps.Marker({
             mag: earthquakes[i].mag,
-            felt : earthquakes[i].felt,
-            urlLink : earthquakes[i].url,
+            felt: earthquakes[i].felt,
+            urlLink: earthquakes[i].url,
             depth: earthquakes[i].depth,
             map: map,
             position: position,
@@ -191,18 +164,21 @@ function initMap() { //init map
 
         earthquakeMarker.addListener('click', function() {
             // console.log(123);
-            showPeople(this);
+            var reports = getReportArray(this);
 
+
+            removeReports();
             removeCircle();
             hideOtherEarthquakesMarkers(this);
             removeCityList();
-            map.setZoom(4);
+            map.setZoom(6);
             map.setCenter(this.getPosition());
 
             hideAllCitiesMarkers();
             showImpactCities(this, citiesMarkers);
             populateInfoWindow(this, largeInfowindow);
             getCircle(this, this.mag);
+            showReports(reports);
 
             // this.setAnimation(google.maps.Animation.BOUNCE);
             // stopAnimation(this);
@@ -221,19 +197,20 @@ function initMap() { //init map
 
 
 
-
+    // Map click event
     map.addListener('click', function() {
-      removeCircle();
-      hideAllCitiesMarkers();
-      showAllEarthquakesMarkers();
-      removeCityList();
-      map.setZoom(3);
-      map.setCenter({
-          lat: 13.8,
-          lng: 180
-      });
+        removeCircle();
+        hideAllCitiesMarkers();
+        showAllEarthquakesMarkers();
+        removeCityList();
+        map.setZoom(3);
+        map.setCenter({
+            lat: 13.8,
+            lng: 180
+        });
     });
 
+    //UI control
     $(document).ready(function() {
         $("#btn1").click(function() {
             showMag5();
@@ -242,7 +219,7 @@ function initMap() { //init map
             showMag55();
         });
         $("#btn3").click(function() {
-           showMag6();
+            showMag6();
         });
         $("#btn4").click(function() {
             showMag65();
@@ -253,24 +230,17 @@ function initMap() { //init map
     });
 
 
-
-
-
 };
 
 
-
-
-
-
-
+// Info Window
 function populateInfoWindow(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
 
     var wikiurl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title + '&format=json&callback=wikiCallback';
     $.ajax({
         url: wikiurl,
-        dataType: "json",
+        dataType: "jsonp",
         timout: 8000
     }).fail(function() {
         infowindow.setContent('<div>' + 'Please Check Your Connection' + '</div>');
@@ -301,8 +271,7 @@ function populateInfoWindow(marker, infowindow) {
 
 function makeMarkerIcon() {
     // var markerImage = new google.maps.MarkerImage('img/grey.png',
-    //     // 'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + markerColor +
-    //     // '|40|_|%E2%80%A2',
+    //     // 'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + 'FF4040' + '|40|_|%E2%80%A2',
 
     var markerImage = {
         url: 'img/city-marker.png',
@@ -348,7 +317,7 @@ function initEarthquake() {
                 mag: JSONres.features[index].properties.mag,
                 tsunami: JSONres.features[index].properties.tsunami,
                 felt: JSONres.features[index].properties.felt,
-                url: JSONres.features[index].properties.url
+                url: JSONres.features[index].properties.detail
             };
             array[index] = newObejct;
         })(index);
@@ -402,122 +371,6 @@ function earthquakeIcon(magnitude) {
     }
 };
 
-
-
-function synAjaxFuntion(url) {
-  var res;
-  var XHR = new XMLHttpRequest();
-  XHR.open("get", url , false);
-  XHR.send(null);
-  if ( XHR.status >= 200 && XHR.status <= 300 || XHR.status == 304) {
-    res = XHR.responseText;
-  }
-  return JSON.parse(res);
-}
-
-
-
-
-function showPeople(marker) {
-  var felt = marker.felt;
-  if (felt == null) {
-    return null;
-  }
-  var tempRes = synAjaxFuntion(marker.url);
-  var geoJson = "dyfi_geo_10km.geojson";
-  var res = tempRes.properties.products.dyfi.contents.genJson.url;
-  var array = synAjaxFuntion(res);
-  console.log(array)
-}
-
-function synAjaxFuntion(url) {
-  var res;
-  var XHR = new XMLHttpRequest();
-  XHR.open("get", url , false);
-  XHR.send(null);
-  if ( XHR.status >= 200 && XHR.status <= 300 || XHR.status == 304) {
-    res = XHR.responseText;
-  }
-  var jsonRes = JSON.parse(res)
-  console.log(jsonRes);
-  return jsonRes;
-}
-
-//getMarkerArray
-function getMarkerArray(marker) {
-  if (marker.felt == null) {
-    return null;
-  }
-    var array;
-    // console.log(response.features[index].properties.detail);
-    $.ajax({
-      url: marker.detail,
-      dataType:"json"
-    }).done(function (response) {
-      var geoJson = "dyfi_geo_10km.geojson";
-      // console.log(response);
-      // console.log(response.properties.products.dyfi[0].contents["dyfi_geo_10km.geojson"].url);
-      // var temp
-      // console.log(JSON.stringify(response.properties.products.dyfi[0].contents));
-      $.ajax({
-        url:response.properties.products.dyfi[0].contents["dyfi_geo_10km.geojson"].url,
-        dataType:"json"
-      }).done(function (response){
-        // console.log(response);
-        console.log(response.features);
-        var array = new Array(response.features.length);
-        for (var index in response.features) {
-          (function(index) {
-            var newObejct = {
-                properties: response.features[index].properties,
-                square: [{
-                    lat: response.features[index].geometry.coordinates[0][0][1],
-                    lng: response.features[index].geometry.coordinates[0][0][0]
-                },
-                {
-                  lat: response.features[index].geometry.coordinates[0][1][1],
-                  lng: response.features[index].geometry.coordinates[0][1][0]
-                },
-                {
-                  lat: response.features[index].geometry.coordinates[0][2][1],
-                  lng: response.features[index].geometry.coordinates[0][2][0]
-                },
-                {
-                  lat: response.features[index].geometry.coordinates[0][3][1],
-                  lng: response.features[index].geometry.coordinates[0][3][0]
-                }]
-
-            };
-            array[index] = newObejct;
-        })(index);
-        }
-        // console.log(array);
-      });
-    });
-  return array;
-
-}
-
-
-
-
-function getCircle(marker, magnitude) {
-        cityCircle = new google.maps.Circle({
-        strokeColor: '#FF0000',
-        strokeOpacity: 0,
-        strokeWeight: 2,
-        fillColor: '#FF0000',
-        fillOpacity: 0.35,
-        map: map,
-        center: marker.position,
-        radius: 20 * Math.pow(1.8, (2 * magnitude - 5)) * 1000
-    });
-};
-
-function removeCircle(){
-  cityCircle.setMap(null)
-}
-
 function showAllCitiesMarkers() {
     for (var i = 0; i < citiesMarkers.length; i++) {
         citiesMarkers[i].setMap(map);
@@ -525,15 +378,15 @@ function showAllCitiesMarkers() {
 };
 
 function hideAllCitiesMarkers() {
-  for (var i = 0; i < citiesMarkers.length; i++) {
-      citiesMarkers[i].setMap(null);
-  }
+    for (var i = 0; i < citiesMarkers.length; i++) {
+        citiesMarkers[i].setMap(null);
+    }
 };
 
-function showAllEarthquakesMarkers(){
-  for (var i = 0; i < earthquakesMarkers.length; i++) {
-      earthquakesMarkers[i].setMap(map);
-  }
+function showAllEarthquakesMarkers() {
+    for (var i = 0; i < earthquakesMarkers.length; i++) {
+        earthquakesMarkers[i].setMap(map);
+    }
 };
 
 function hideOtherEarthquakesMarkers(marker) {
@@ -546,7 +399,8 @@ function hideOtherEarthquakesMarkers(marker) {
 
 
 function getCircle(marker, magnitude) {
-        cityCircle = new google.maps.Circle({
+  if (marker.felt == null) {
+    cityCircle = new google.maps.Circle({
         strokeColor: '#FF0000',
         strokeOpacity: 0,
         strokeWeight: 2,
@@ -554,12 +408,15 @@ function getCircle(marker, magnitude) {
         fillOpacity: 0.35,
         map: map,
         center: marker.position,
-        radius: (20 * Math.pow(1.8, (2 * magnitude - 5))*1000)/1.60934
+        radius: (20 * Math.pow(1.8, (2 * magnitude - 5)) * 1000) / 1.60934
     });
+  }
+
+
 };
 
-function removeCircle(){
-  cityCircle.setMap(null)
+function removeCircle() {
+    cityCircle.setMap(null)
 }
 
 function showAllCitiesMarkers() {
@@ -569,15 +426,15 @@ function showAllCitiesMarkers() {
 };
 
 function hideAllCitiesMarkers() {
-  for (var i = 0; i < citiesMarkers.length; i++) {
-      citiesMarkers[i].setMap(null);
-  }
+    for (var i = 0; i < citiesMarkers.length; i++) {
+        citiesMarkers[i].setMap(null);
+    }
 };
 
-function showAllEarthquakesMarkers(){
-  for (var i = 0; i < earthquakesMarkers.length; i++) {
-      earthquakesMarkers[i].setMap(map);
-  }
+function showAllEarthquakesMarkers() {
+    for (var i = 0; i < earthquakesMarkers.length; i++) {
+        earthquakesMarkers[i].setMap(map);
+    }
 };
 
 function hideOtherEarthquakesMarkers(marker) {
@@ -598,7 +455,7 @@ function showImpactCities(earthquakeMarker, markers) {
         var dis = google.maps.geometry.spherical.computeDistanceBetween(earthquakeMarker.getPosition(), markers[i].getPosition())
         // console.log(dis);
         // console.log(earthquakeMarker.mag)
-        var impactDis = (20 * Math.pow(1.8, (2 * earthquakeMarker.mag - 5))*1000)/1.60934;
+        var impactDis = (20 * Math.pow(1.8, (2 * earthquakeMarker.mag - 5)) * 1000) / 1.60934;
         //console.log(impactDis)
         if (dis <= impactDis) {
             markers[i].setMap(map);
@@ -609,76 +466,169 @@ function showImpactCities(earthquakeMarker, markers) {
 
 
 function showCityList(marker) {
-  $('.list-group').append('<a href="" class="list-group-item">'+ marker.title + '</a>');
+    $('.citylist').append('<a href="" class="list-group-city">' + marker.title + '</a>');
 }
 
-function removeCityList(){
-  $('.list-group-item').remove();
+function removeCityList() {
+    $('.list-group-city').remove();
 }
 
 //Panel function
-function showMag5(){
-  for (var i = 0; i < earthquakesMarkers.length; i++) {
-      if(earthquakesMarkers[i].mag < 5) {
-          earthquakesMarkers[i].setMap(map);
-      } else {
-        earthquakesMarkers[i].setMap(null);
-      }
-  }
+function showMag5() {
+    for (var i = 0; i < earthquakesMarkers.length; i++) {
+        if (earthquakesMarkers[i].mag < 5) {
+            earthquakesMarkers[i].setMap(map);
+        } else {
+            earthquakesMarkers[i].setMap(null);
+        }
+    }
 };
 
-function showMag55(){
-  for (var i = 0; i < earthquakesMarkers.length; i++) {
-      if(earthquakesMarkers[i].mag >= 5 && earthquakesMarkers[i].mag < 5.5) {
-          earthquakesMarkers[i].setMap(map);
-      } else {
-        earthquakesMarkers[i].setMap(null);
-      }
-  }
+function showMag55() {
+    for (var i = 0; i < earthquakesMarkers.length; i++) {
+        if (earthquakesMarkers[i].mag >= 5 && earthquakesMarkers[i].mag < 5.5) {
+            earthquakesMarkers[i].setMap(map);
+        } else {
+            earthquakesMarkers[i].setMap(null);
+        }
+    }
 };
 
-function showMag6(){
-  for (var i = 0; i < earthquakesMarkers.length; i++) {
-      if(earthquakesMarkers[i].mag >= 5.5 && earthquakesMarkers[i].mag < 6) {
-          earthquakesMarkers[i].setMap(map);
-      } else {
-        earthquakesMarkers[i].setMap(null);
-      }
-  }
+function showMag6() {
+    for (var i = 0; i < earthquakesMarkers.length; i++) {
+        if (earthquakesMarkers[i].mag >= 5.5 && earthquakesMarkers[i].mag < 6) {
+            earthquakesMarkers[i].setMap(map);
+        } else {
+            earthquakesMarkers[i].setMap(null);
+        }
+    }
 };
 
-function showMag65(){
-  for (var i = 0; i < earthquakesMarkers.length; i++) {
-      if(earthquakesMarkers[i].mag >= 6) {
-          earthquakesMarkers[i].setMap(map);
-      } else {
-        earthquakesMarkers[i].setMap(null);
-      }
-  }
+function showMag65() {
+    for (var i = 0; i < earthquakesMarkers.length; i++) {
+        if (earthquakesMarkers[i].mag >= 6) {
+            earthquakesMarkers[i].setMap(map);
+        } else {
+            earthquakesMarkers[i].setMap(null);
+        }
+    }
 };
-
-
 
 function synAjaxFuntion(url) {
-  var res;
-  var XHR = new XMLHttpRequest();
-  XHR.open("get", url , false);
-  XHR.send(null);
-  if ( XHR.status >= 200 && XHR.status <= 300 || XHR.status == 304) {
-    res = XHR.responseText;
+    var res;
+    var XHR = new XMLHttpRequest();
+    XHR.open("get", url, false);
+    XHR.send(null);
+    if (XHR.status >= 200 && XHR.status <= 300 || XHR.status == 304) {
+        res = XHR.responseText;
+    }
+    var jsonRes = JSON.parse(res)
+    console.log(jsonRes);
+    return jsonRes;
+}
+
+//getMarkerArray
+function getReportArray(marker) {
+
+    if (marker.felt == null) {
+        return null;
+    }
+    var array;
+    // console.log(response.features[index].properties.detail);
+    $.ajax({
+        url: marker.urlLink,
+        dataType: "json"
+    }).done(function(response) {
+        var geoJson = "dyfi_geo_10km.geojson";
+        // console.log(response);
+        // console.log(response.properties.products.dyfi[0].contents["dyfi_geo_10km.geojson"].url);
+        // var temp
+        // console.log(JSON.stringify(response.properties.products.dyfi[0].contents));
+        $.ajax({
+            url: response.properties.products.dyfi[0].contents["dyfi_geo_10km.geojson"].url,
+            dataType: "json"
+        }).done(function(response) {
+            // console.log(response);
+
+            array = new Array(response.features.length);
+            for (var index in response.features) {
+                (function(index) {
+                    var newObejct = {
+                        properties: response.features[index].properties,
+                        square: [{
+                                lat: response.features[index].geometry.coordinates[0][0][1],
+                                lng: response.features[index].geometry.coordinates[0][0][0]
+                            },
+                            {
+                                lat: response.features[index].geometry.coordinates[0][1][1],
+                                lng: response.features[index].geometry.coordinates[0][1][0]
+                            },
+                            {
+                                lat: response.features[index].geometry.coordinates[0][2][1],
+                                lng: response.features[index].geometry.coordinates[0][2][0]
+                            },
+                            {
+                                lat: response.features[index].geometry.coordinates[0][3][1],
+                                lng: response.features[index].geometry.coordinates[0][3][0]
+                            }
+                        ]
+
+                    };
+                    array[index] = newObejct;
+                })(index);
+            }
+            console.log(array);
+        });
+    });
+    console.log(array);
+    return array;
+
+}
+
+function showReports(reports){
+  if (reports != null) {
+    for (var i = 0; i < reports.length; i++) {
+
+      var corrds = reports[i].square;
+      reportSquare[i] = new google.maps.Polygon({
+        paths: corrds,
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35
+      });
+      reportSquare[i].setMap(map);
+      var tmp = reports[i];
+
+
+      reportSquare[i].addListener('mouseover', function() {
+        console.log(tmp);
+          showReportList(tmp);
+
+      });
+
+      reportSquare[i].addListener('mouseout', function() {
+        removeReportList();
+      });
+
+    };
+  };
+
+};
+
+function removeReports(){
+
+  for (var i = 0; i < reportSquare.length; i++) {
+      reportSquare[i].setMap(null);
   }
-  return res;
 }
 
 
-function showPeople(marker) {
-  var felt = marker.felt;
-  if (felt == null) {
-    return null;
-  }
-  var tempRes = synAjaxFuntion(marker.urlLink);
-  var geoJson = "dyfi_geo_10km.geojson";
-  res = tempRes.properties;
-  var array = synAjaxFuntion(res);
-  console.log(array)
-};
+function showReportList(marker) {
+    $('.reportlist').append('<a href="" class="list-group-report">' + marker.properties.nresp + '</a>');
+}
+
+function removeReportList() {
+    $('.list-group-report').remove();
+}
