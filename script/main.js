@@ -5,7 +5,7 @@ var citiesMarkers = [];
 var earthquakesMarkers = [];
 var ciryCircle;
 var reportSquare = [];
-
+// var reportInfoWindow;
 
 
 
@@ -77,11 +77,18 @@ function initMap() { //init map
 
 
     var largeInfowindow = new google.maps.InfoWindow();
-    reportInfoWindow= new google.maps.InfoWindow();
+    var cityInfoWindow = new google.maps.InfoWindow();
+    // reportInfoWindow = new google.maps.InfoWindow();
+
+
+
     // var defaultIcon = makeMarkerIcon('FF4040');
     // var highlightedIcon = makeMarkerIcon('00CD00');
     cityCircle = new google.maps.Circle();
-    reportSquare[0] = new google.maps.Polygon();
+
+
+
+
     earthquakes = initEarthquake();
     //var largeInfowindow = new google.maps.InfoWindow();
 
@@ -112,7 +119,7 @@ function initMap() { //init map
             map: null,
             position: position,
             title: title,
-            icon: makeMarkerIcon(),
+            // icon: makeMarkerIcon(),
 
             //animation: google.maps.Animation.DROP,
             id: i //i not 1
@@ -122,7 +129,7 @@ function initMap() { //init map
 
         cityMarker.addListener('click', function() {
 
-            populateInfoWindow(this, largeInfowindow);
+            showCityInfoWindow(this, cityInfoWindow);
             this.setAnimation(google.maps.Animation.BOUNCE);
             stopAnimation(this);
         });
@@ -176,7 +183,7 @@ function initMap() { //init map
 
             hideAllCitiesMarkers();
             showImpactCities(this, citiesMarkers);
-            populateInfoWindow(this, largeInfowindow);
+            earthquakeInfoWindow(this, largeInfowindow);
             getCircle(this, this.mag);
             showReports(reports);
 
@@ -230,11 +237,12 @@ function initMap() { //init map
     });
 
 
+
 };
 
 
 // Info Window
-function populateInfoWindow(marker, infowindow) {
+function showCityInfoWindow(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
 
     var wikiurl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title + '&format=json&callback=wikiCallback';
@@ -268,6 +276,33 @@ function populateInfoWindow(marker, infowindow) {
         infowindow.setMarker = null;
     });
 }
+
+function earthquakeInfoWindow(marker, infowindow) {
+  if (infowindow.marker != marker) {
+      infowindow.marker = marker;
+
+      infowindow.setContent('<div id="iw-container">' +
+                    '<div class="iw-title">' + marker.title + '</div>' +
+                    '<div class="iw-content">' +
+                      '<div class="iw-subTitle">Mag: <spam style="color:red">' + marker.mag +'</spam></div>' +
+
+                      '<div class="iw-subTitle">Depth: ' + marker.depth + ' Km</div>' +
+
+                      '<div class="iw-subTitle">Felt #: ' + marker.felt + '</div>' +
+
+                    '</div>' +
+
+                  '</div>');
+      infowindow.open(map, marker);
+
+  };
+  infowindow.addListener('closeclick', function() {
+
+      infowindow.setMarker = null;
+  });
+};
+
+
 
 function makeMarkerIcon() {
     // var markerImage = new google.maps.MarkerImage('img/grey.png',
@@ -523,7 +558,7 @@ function synAjaxFuntion(url) {
         res = XHR.responseText;
     }
     var jsonRes = JSON.parse(res)
-    console.log(jsonRes);
+
     return jsonRes;
 }
 
@@ -577,44 +612,95 @@ function getReportArray(marker) {
                     array[index] = newObejct;
                 })(index);
             }
-            console.log(array);
+
         });
     });
-    console.log(array);
+
     return array;
 
 }
+
+// function showReports(reports){
+//   if (reports != null) {
+//     for (var i = 0; i < reports.length; i++) {
+//
+//       var corrds = reports[i].square;
+//        var reportSquare = new google.maps.Polygon({
+//         paths: corrds,
+//         strokeColor: '#FF0000',
+//         strokeOpacity: 0.8,
+//         strokeWeight: 2,
+//         fillColor: '#FF0000',
+//         fillOpacity: 0.35
+//       });
+//       reportSquare.setMap(map);
+//       var tmp = reports[i];
+//
+//       reportSquares.push(reportSquare);
+//
+//
+//       reportSquare.addListener('mouseover', function() {
+//         console.log(tmp);
+//           showReportList(tmp);
+//
+//       });
+//
+//       reportSquare.addListener('mouseout', function() {
+//         removeReportList();
+//       });
+//
+//     };
+//   };
+//
+// };
 
 function showReports(reports){
   if (reports != null) {
     for (var i = 0; i < reports.length; i++) {
 
-      var corrds = reports[i].square;
-      reportSquare[i] = new google.maps.Polygon({
-        paths: corrds,
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#FF0000',
-        fillOpacity: 0.35
-      });
-      reportSquare[i].setMap(map);
-      var tmp = reports[i];
+      (function () {
+        var corrds = reports[i].square;
+        reportSquare[i] = new google.maps.Polygon({
+          paths: corrds,
+          strokeColor: '#FF0000',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#FF0000',
+          fillOpacity: 0.35
+        });
+        reportSquare[i].setMap(map);
+        var tmp = reports[i];
+
+        var reportInfowindow = new google.maps.InfoWindow();
+        reportSquare[i].addListener('mouseover', function() {
+
+            showReportList(tmp);
+            // showReportInfoWindow(tmp, reportInfoWindow);
+
+            reportInfowindow.setContent('<div>' +
+                          '<div ><b>' + tmp.properties.name + '</b></div>' +
+                          '<div>' +
+                            '<div ><b>Felt Itensity:  </b>'+ '<spam style="color: red">'+ tmp.properties.cdi+'</spam>' +'</div>' +
+                            '<div ><b>Response #: ' +tmp.properties.nresp +'</b></div>' +
+                            '<div ><b>Distance:  ' + tmp.properties.dist + ' Km</b></div>' +
 
 
-      reportSquare[i].addListener('mouseover', function() {
-        console.log(tmp);
-          showReportList(tmp);
+                            // '<br>Phone. +351 234 320 600<br>e-mail: geral@vaa.pt<br>www: www.myvistaalegre.com</p>'+
+                          '</div>' +
+                        '</div>');
 
-      });
 
-      reportSquare[i].addListener('mouseout', function() {
-        removeReportList();
-      });
+            reportInfowindow.setPosition(tmp.square[2]);
+            reportInfowindow.open(map);
+        });
 
+        reportSquare[i].addListener('mouseout', function() {
+          removeReportList();
+          reportInfowindow.close();
+        });
+      })();
     };
   };
-
 };
 
 function removeReports(){
@@ -626,7 +712,12 @@ function removeReports(){
 
 
 function showReportList(marker) {
-    $('.reportlist').append('<a href="" class="list-group-report">' + marker.properties.nresp + '</a>');
+    $('.reportlist').append('<div class="list-group-report" >'+
+                            '<b> Report' + marker.properties.name + '</b>'+
+                            '<p> Number of Response: ' + marker.properties.nresp + '</p>' +
+                            '<p> Felt CID' + marker.properties.cdi + '</p>'+
+                            '<p> Distance' + marker.properties.dist + '</p></div>'
+                          );
 }
 
 function removeReportList() {
