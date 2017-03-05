@@ -234,8 +234,10 @@ function initMap() { //init map
         $("#btn5").click(function() {
             showAllEarthquakesMarkers();
         });
-    });
 
+    });
+    $('.count-earthquake').append('<spam>  ' + earthquakesMarkers.length + '</spam>');
+    $('.count-city').append('<spam>  ' + citiesMarkers.length + '</spam>');
 
 
 };
@@ -260,9 +262,9 @@ function showCityInfoWindow(marker, infowindow) {
         if (infowindow.marker != marker) {
             infowindow.marker = marker;
             if (articleStr == null) {
-                infowindow.setContent('<div>' + marker.title + '</div>' + 'Oops, no such wiki');
+                infowindow.setContent('<div>' + marker.title + '</div>' + 'Oops, cannot find any thing on Wikipeida');
             } else {
-                infowindow.setContent('<div>' + '</div>' + '<a href = "' + url + '">' + articleStr + '</a>');
+                infowindow.setContent('<div>Find out ' + '<a href = "' + url + '">' + articleStr + '</a> on Wikipeida</div>');
             }
             infowindow.open(map, marker);
             // Make sure the marker property is cleared if the infowindow is closed.
@@ -501,7 +503,7 @@ function showImpactCities(earthquakeMarker, markers) {
 
 
 function showCityList(marker) {
-    $('.citylist').append('<a href="" class="list-group-city">' + marker.title + '</a>');
+    $('.citylist').append('<a class="list-group-item list-group-city">' + marker.title + '</a>');
 }
 
 function removeCityList() {
@@ -674,7 +676,7 @@ function showReports(reports){
         var reportInfowindow = new google.maps.InfoWindow();
         reportSquare[i].addListener('mouseover', function() {
 
-            showReportList(tmp);
+            //showReportList(tmp);
             // showReportInfoWindow(tmp, reportInfoWindow);
 
             reportInfowindow.setContent('<div>' +
@@ -695,7 +697,7 @@ function showReports(reports){
         });
 
         reportSquare[i].addListener('mouseout', function() {
-          removeReportList();
+          //removeReportList();
           reportInfowindow.close();
         });
       })();
@@ -711,15 +713,15 @@ function removeReports(){
 }
 
 
-function showReportList(marker) {
-    $('.reportlist').append('<div class="list-group-report" >'+
-                            '<b> Report' + marker.properties.name + '</b>'+
-                            '<p> Number of Response: ' + marker.properties.nresp + '</p>' +
-                            '<p> Felt CID' + marker.properties.cdi + '</p>'+
-                            '<p> Distance' + marker.properties.dist + '</p></div>'
-                          );
-}
-
-function removeReportList() {
-    $('.list-group-report').remove();
-}
+// function showReportList(marker) {
+//     $('.reportlist').append('<div class="list-group-report" >'+
+//                             '<b> Report' + marker.properties.name + '</b>'+
+//                             '<p> Number of Response: ' + marker.properties.nresp + '</p>' +
+//                             '<p> Felt CID' + marker.properties.cdi + '</p>'+
+//                             '<p> Distance' + marker.properties.dist + '</p></div>'
+//                           );
+// }
+//
+// function removeReportList() {
+//     $('.list-group-report').remove();
+// }

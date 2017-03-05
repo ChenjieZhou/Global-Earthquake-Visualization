@@ -19,6 +19,20 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="side-bar">
+
+                  <div id="my-nav">
+
+                      <h1>Earthquakes Map: Do you feel it?</h1>
+                      <p>
+                        This is an interactive map showing earthquakes that happened worldwide in the last 7 days larger than 4.5 Mag. <br>
+                      </p>
+                      <p>Click the Earthquake Marker to see the felt report and possibly feft cities</p>
+                      <!-- <p><a href="#" id="clear">Show only the earthquakes as they happen</a> or <a href="#" id="add">Show earthquakes cumulatively.</a></p> -->
+                      <p>Earthquake data is from <a href="http://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php" target="_blank">USGS</a></p>
+
+                    </div>
+
+
                     <h4>Earthquake Filter</h4>
                     <div class="btn-group btn-group-sm my-btn-group" role="group" aria-label="Basic example">
                         <button id="btn1" type="button" class="btn btn-secondary" style="background-color:rgb(101, 216, 102)">4.5-5</button>
@@ -27,17 +41,25 @@
                         <button id="btn4" type="button" class="btn btn-secondary" style="background-color:rgb(253, 70, 86)">&gt; 6 </button>
                         <button id="btn5" type="button" class="btn btn-secondary">All</button>
                     </div>
-                    <h4>Possiblly Felt Cities</h4>
+                    <h4>Possibly Felt Cities</h4>
                     <div class="city-list">
-                    <div class="list-group citylist">
+                        <div class="list-group citylist">
+                        </div>
                     </div>
-                  </div>
 
-                  <h4>Felt Report</h4>
+                    <!-- <h4>Felt Report</h4>
                   <div class="report-list">
                   <div class="list-group reportlist">
                   </div>
-                </div>
+                </div> -->
+                    <div class="card">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item count-earthquake">4.5+ earthqukaes last week: </li>
+                            <li class="list-group-item count-city">All possibly felt major cities: </li>
+
+                        </ul>
+                    </div>
+
 
                 </div>
             </div>
