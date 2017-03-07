@@ -1,4 +1,5 @@
 var map;
+var map2;
 var cities = [];
 var earthquakes = [];
 var citiesMarkers = [];
@@ -7,7 +8,7 @@ var ciryCircle;
 var reportSquare = [];
 // var reportInfoWindow;
 
-
+var numReports = 0;
 
 
 function initMap() { //init map
@@ -73,6 +74,314 @@ function initMap() { //init map
             }
         ]
     });
+
+    map2 = new google.maps.Map(document.getElementById('map2'), {
+        center: {
+            lat: 13.8,
+            lng: 180
+        },
+        //mapTypeId: 'satellite',
+        zoom: 0,
+        disableDefaultUI: true,
+        draggable: false,
+        zoomControl: false,
+        scrollwheel: false,
+        disableDoubleClickZoom: true,
+        cursor: 'default',
+        clickableIcons:false,
+        styles: [
+  {
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#1d2c4d"
+      }
+    ]
+  },
+  {
+    "elementType": "labels",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#8ec3b9"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#1a3646"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.country",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#4b6878"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.land_parcel",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#64779e"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.neighborhood",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.province",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#4b6878"
+      }
+    ]
+  },
+  {
+    "featureType": "landscape.man_made",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#334e87"
+      }
+    ]
+  },
+  {
+    "featureType": "landscape.natural",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#023e58"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#283d6a"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "labels.text",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#6f9ba5"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#1d2c4d"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.business",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#023e58"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#3C7680"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#304a7d"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "labels.icon",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#98a5be"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#1d2c4d"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#2c6675"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#255763"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#b0d5ce"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#023e58"
+      }
+    ]
+  },
+  {
+    "featureType": "transit",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "transit",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#98a5be"
+      }
+    ]
+  },
+  {
+    "featureType": "transit",
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#1d2c4d"
+      }
+    ]
+  },
+  {
+    "featureType": "transit.line",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#283d6a"
+      }
+    ]
+  },
+  {
+    "featureType": "transit.station",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#3a4762"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#0e1626"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#4e6d70"
+      }
+    ]
+  }
+]
+    });
+
 
 
 
@@ -167,6 +476,18 @@ function initMap() { //init map
         });
 
 
+        var earthquakeMarker2 = new google.maps.Marker({
+
+            map: map2,
+            position: position,
+            title: title,
+            icon: cycleIcon(earthquakes[i].mag),
+            clickable: false,
+            // animation: google.maps.Animation.DROP,
+            id: i //i not 1
+        });
+
+
         earthquakesMarkers.push(earthquakeMarker);
 
         earthquakeMarker.addListener('click', function() {
@@ -210,6 +531,7 @@ function initMap() { //init map
         hideAllCitiesMarkers();
         showAllEarthquakesMarkers();
         removeCityList();
+        showNone();
         map.setZoom(3);
         map.setCenter({
             lat: 13.8,
@@ -219,6 +541,7 @@ function initMap() { //init map
 
     //UI control
     $(document).ready(function() {
+      $(".dropdown-button").dropdown();
         $("#btn1").click(function() {
             showMag5();
         });
@@ -236,9 +559,11 @@ function initMap() { //init map
         });
 
     });
-    $('.count-earthquake').append('<spam>  ' + earthquakesMarkers.length + '</spam>');
-    $('.count-city').append('<spam>  ' + citiesMarkers.length + '</spam>');
+    $('.count-earthquake').append('<span>  ' + earthquakesMarkers.length + '</span>');
+    $('.count-city').append('<span>  ' + citiesMarkers.length + '</span>');
 
+    countReport();
+    $('.count-report').append('<span>  ' + numReports + '</span>');
 
 };
 
@@ -286,7 +611,7 @@ function earthquakeInfoWindow(marker, infowindow) {
       infowindow.setContent('<div id="iw-container">' +
                     '<div class="iw-title">' + marker.title + '</div>' +
                     '<div class="iw-content">' +
-                      '<div class="iw-subTitle">Mag: <spam style="color:red">' + marker.mag +'</spam></div>' +
+                      '<div class="iw-subTitle">Mag: <span style="color:red">' + marker.mag +'</span></div>' +
 
                       '<div class="iw-subTitle">Depth: ' + marker.depth + ' Km</div>' +
 
@@ -364,16 +689,16 @@ function initEarthquake() {
     return array;
 };
 
-// function cycleIcon(magnitude) {
-//     return {
-//         path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-//         fillColor: 'red',
-//         fillOpacity: .2,
-//         scale: Math.pow(2, magnitude) / 2,
-//         strokeColor: 'white',
-//         strokeWeight: 0
-//     };
-// };
+function cycleIcon(magnitude) {
+    return {
+        path: google.maps.SymbolPath.CIRCLE,
+        fillColor: 'red',
+        fillOpacity: .2,
+        scale: Math.pow(2, magnitude) / 5,
+        strokeColor: 'white',
+        strokeWeight: 0
+    };
+};
 
 function earthquakeIcon(magnitude) {
     if (magnitude < 5) {
@@ -487,6 +812,7 @@ function showImpactCities(earthquakeMarker, markers) {
 
     // console.log(earthquakeMarker)
     // console.log(markers)
+    var count = 0;
     for (var i = 0; i < markers.length; i++) {
 
         var dis = google.maps.geometry.spherical.computeDistanceBetween(earthquakeMarker.getPosition(), markers[i].getPosition())
@@ -495,19 +821,29 @@ function showImpactCities(earthquakeMarker, markers) {
         var impactDis = (20 * Math.pow(1.8, (2 * earthquakeMarker.mag - 5)) * 1000) / 1.60934;
         //console.log(impactDis)
         if (dis <= impactDis) {
+          count++;
             markers[i].setMap(map);
             showCityList(markers[i]);
         };
+    };
+    if(count ===0){
+        showNone();
     }
 };
 
 
 function showCityList(marker) {
-    $('.citylist').append('<a class="list-group-item list-group-city">' + marker.title + '</a>');
+    $('.collection').append('<li class="collection-item list-group-city">' + marker.title + '</li>');
 }
 
 function removeCityList() {
     $('.list-group-city').remove();
+
+}
+
+function showNone(){
+  $('.list-group-city').remove();
+  $('.collection-header').append('<li class="collection-item list-group-city">' + 'None' + '</li>');
 }
 
 //Panel function
@@ -682,7 +1018,7 @@ function showReports(reports){
             reportInfowindow.setContent('<div>' +
                           '<div ><b>' + tmp.properties.name + '</b></div>' +
                           '<div>' +
-                            '<div ><b>Felt Itensity:  </b>'+ '<spam style="color: red">'+ tmp.properties.cdi+'</spam>' +'</div>' +
+                            '<div ><b>Felt Itensity:  </b>'+ '<span style="color: red">'+ tmp.properties.cdi+'</span>' +'</div>' +
                             '<div ><b>Response #: ' +tmp.properties.nresp +'</b></div>' +
                             '<div ><b>Distance:  ' + tmp.properties.dist + ' Km</b></div>' +
 
@@ -725,3 +1061,13 @@ function removeReports(){
 // function removeReportList() {
 //     $('.list-group-report').remove();
 // }
+
+
+function countReport(){
+  for (var i = 0; i < earthquakesMarkers.length; i++) {
+      if (earthquakesMarkers[i].felt != null) {
+          numReports = numReports + earthquakesMarkers[i].felt;
+      }
+  }
+  return numReports;
+}

@@ -5,6 +5,11 @@ body::-webkit-scrollbar-thumb {
 #map {
   height: 800px;
 }
+
+#map2 {
+  height: 200px;
+
+}
 /* Optional: Makes the sample page fill the window. */
 html, body {
   height: 100%;
@@ -13,7 +18,7 @@ html, body {
   width: auto;
 }
 
-.container-fluid, .col-md-3, .col-md-9{
+/*.container-fluid, .col-md-3, .col-md-9{
   padding: 0;
 }
 
@@ -58,7 +63,7 @@ h4{
 .list-group-city{
 
 
-}
+}*/
 
 
 #iw-container {
@@ -92,8 +97,7 @@ h4{
 }
 
 
-#my-nav {
-  /*box-sizing: border-box;*/
+/*#my-nav {
   padding: 15px;
   position: flex;
   right: 20px;
@@ -109,4 +113,23 @@ h4{
 
 #my-nav p {
   margin: 2px 0;
+}*/
+
+.row{
+	margin-bottom: 0;
+}
+
+.card{
+	margin: 0;
+}
+
+.row .col{
+	padding: 0;
+}
+
+.collection{
+	margin: 0;
+	border-radius:0;
+	max-height: 330px;
+	overflow: scroll;
 }

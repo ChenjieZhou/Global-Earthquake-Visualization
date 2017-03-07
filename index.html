@@ -7,66 +7,128 @@
 
     <script src="script/main.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmk2e7mpwBDhqjS73-7lTaCGMY-sZo_1M&libraries=geometry&callback=initMap"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script> -->
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
     <link rel="stylesheet" type="text/css" href="stylesheet/main.css">
     <title>Global Earthquakes</title>
 </head>
 
 <body>
-    <div class="container-fluid">
+    <div class="container-fluid ">
+
         <div class="row">
-            <div class="col-md-3">
-                <div class="side-bar">
+            <div class="col s3 grey darken-3" style="height:865px">
 
-                  <div id="my-nav">
 
-                      <h1>Earthquakes Map: Do you feel it?</h1>
-                      <p>
-                        This is an interactive map showing earthquakes that happened worldwide in the last 7 days larger than 4.5 Mag. <br>
-                      </p>
-                      <p>Click the Earthquake Marker to see the felt report and possibly feft cities</p>
-                      <!-- <p><a href="#" id="clear">Show only the earthquakes as they happen</a> or <a href="#" id="add">Show earthquakes cumulatively.</a></p> -->
-                      <p>Earthquake data is from <a href="http://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php" target="_blank">USGS</a></p>
-
+                <div class="card">
+                    <div class="card-image">
+                        <div id="map2"></div>
+                        <!-- <span class="card-title">Card Title</span> -->
                     </div>
 
-
-                    <h4>Earthquake Filter</h4>
-                    <div class="btn-group btn-group-sm my-btn-group" role="group" aria-label="Basic example">
-                        <button id="btn1" type="button" class="btn btn-secondary" style="background-color:rgb(101, 216, 102)">4.5-5</button>
-                        <button id="btn2" type="button" class="btn btn-secondary" style="background-color:rgb(244, 244, 108)">5-5.5</button>
-                        <button id="btn3" type="button" class="btn btn-secondary" style="background-color:rgb(241, 197, 46)">5.5-6</button>
-                        <button id="btn4" type="button" class="btn btn-secondary" style="background-color:rgb(253, 70, 86)">&gt; 6 </button>
-                        <button id="btn5" type="button" class="btn btn-secondary">All</button>
+                    <div class="card-content">
+                        <p>This is an interactive map showing earthquakes that happened worldwide in the last 7 days larger than 4.5 Mag. Click the Earthquake Marker to see the felt report and possibly feft cities</p>
                     </div>
-                    <h4>Possibly Felt Cities</h4>
-                    <div class="city-list">
-                        <div class="list-group citylist">
+                    <div class="card-tabs">
+                        <ul class="tabs tabs-fixed-width">
+                            <li class="tab"><a href="#test1">Earthquake</a></li>
+                            <li class="tab"><a class="active" href="#test2">City</a></li>
+                            <li class="tab"><a href="#test3">Report</a></li>
+                        </ul>
+                    </div>
+                    <div class="card-content grey lighten-4">
+                        <div id="test1">
+                            <li class="list-group-item count-earthquake">4.5+ earthqukaes last week: </li>
+
+                        </div>
+                        <div id="test2">
+                            <li class="list-group-item count-city">All possibly felt major cities: </li>
+                        </div>
+                        <div id="test3">
+                            <li class="list-group-item count-report">Number of reports: </li>
                         </div>
                     </div>
+                    <div class="card-action">
+                        Data Source<a href="http://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php" target="_blank"> USGS</a>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+                    <ul class="collection with-header">
+                    <li class="collection-header"><h5>Possibly Felt Cities List:</h5></li>
+                    <li class="collection-item list-group-city">None</li>
+                  </ul>
 
                     <!-- <h4>Felt Report</h4>
                   <div class="report-list">
                   <div class="list-group reportlist">
                   </div>
                 </div> -->
-                    <div class="card">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item count-earthquake">4.5+ earthqukaes last week: </li>
-                            <li class="list-group-item count-city">All possibly felt major cities: </li>
 
+
+            </div>
+            <div class="col s9 grey darken-3" style="height:865px">
+
+                <ul id="dropdown1" class="dropdown-content">
+                    <li><a id="btn1" style="background-color:rgb(101, 216, 102)">4.5-5</a></li>
+                    <li><a id="btn2" style="background-color:rgb(244, 244, 108)">5-5.5</a></li>
+                    <li><a id="btn3" style="background-color:rgb(241, 197, 46)">5.5-6</a></li>
+                    <li><a id="btn4" style="background-color:rgb(253, 70, 86)">&gt; 6</a></li>
+                    <li class="divider"></li>
+                    <li><a id="btn5">All</a></li>
+                </ul>
+
+                <nav>
+                    <div class="nav-wrapper  blue-grey darken-4">
+                        <a href="#" class="brand-logo center">Earthquake Map: Do You Feel It ?</a>
+                        <ul id="nav-mobile" class="right hide-on-med-and-down">
+                            <li><a class="dropdown-button" href="#!" data-activates="dropdown1">Earthquake Filter<i class="material-icons right"></i></a></li>
                         </ul>
                     </div>
-
-
-                </div>
-            </div>
-            <div class="col-md-9">
+                </nav>
                 <div id="map"></div>
             </div>
         </div>
+        <footer class="page-footer  blue-grey darken-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col l6 s12">
+                        <h5 class="white-text">Made by</h5>
+                        <ul>
+                            <li><a class="grey-text text-lighten-3">Chenjie Zhou</a></li>
+                            <li><a class="grey-text text-lighten-3">Zhibin Wu</a></li>
+                        </ul>
+                    </div>
+                    <div class="col l4 offset-l2 s12">
+                        <h5 class="white-text">Contact Us</h5>
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="#!">czhou33@ucsc.edu</a></li>
+                            <li><a class="grey-text text-lighten-3" href="#!">zwu58@ucsc.edu</a></li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <div class="container">
+                    © 2017 Copyright
+                    <a class="grey-text text-lighten-4 right" href="https://github.com/starsyork/Globle-Earthquake-Visualization">Github</a>
+                </div>
+            </div>
+        </footer>
 
     </div>
 
