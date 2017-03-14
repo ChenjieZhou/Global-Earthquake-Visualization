@@ -1,13 +1,14 @@
 var map;
+var map2;
 var cities = [];
 var earthquakes = [];
 var citiesMarkers = [];
 var earthquakesMarkers = [];
 var ciryCircle;
 var reportSquare = [];
+// var reportInfoWindow;
 
-
-
+var numReports = 0;
 
 
 function initMap() { //init map
@@ -74,14 +75,329 @@ function initMap() { //init map
         ]
     });
 
+    map2 = new google.maps.Map(document.getElementById('map2'), {
+        center: {
+            lat: 13.8,
+            lng: 180
+        },
+        //mapTypeId: 'satellite',
+        zoom: 0,
+        disableDefaultUI: true,
+        draggable: false,
+        zoomControl: false,
+        scrollwheel: false,
+        disableDoubleClickZoom: true,
+        cursor: 'default',
+        clickableIcons:false,
+        styles: [
+  {
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#1d2c4d"
+      }
+    ]
+  },
+  {
+    "elementType": "labels",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#8ec3b9"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#1a3646"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.country",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#4b6878"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.land_parcel",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#64779e"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.neighborhood",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.province",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#4b6878"
+      }
+    ]
+  },
+  {
+    "featureType": "landscape.man_made",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#334e87"
+      }
+    ]
+  },
+  {
+    "featureType": "landscape.natural",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#023e58"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#283d6a"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "labels.text",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#6f9ba5"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#1d2c4d"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.business",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#023e58"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#3C7680"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#304a7d"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "labels.icon",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#98a5be"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#1d2c4d"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#2c6675"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#255763"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#b0d5ce"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#023e58"
+      }
+    ]
+  },
+  {
+    "featureType": "transit",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "transit",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#98a5be"
+      }
+    ]
+  },
+  {
+    "featureType": "transit",
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#1d2c4d"
+      }
+    ]
+  },
+  {
+    "featureType": "transit.line",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#283d6a"
+      }
+    ]
+  },
+  {
+    "featureType": "transit.station",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#3a4762"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#0e1626"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#4e6d70"
+      }
+    ]
+  }
+]
+    });
+
+
 
 
     var largeInfowindow = new google.maps.InfoWindow();
-    reportInfoWindow= new google.maps.InfoWindow();
+    var cityInfoWindow = new google.maps.InfoWindow();
+    // reportInfoWindow = new google.maps.InfoWindow();
+
+
+
     // var defaultIcon = makeMarkerIcon('FF4040');
     // var highlightedIcon = makeMarkerIcon('00CD00');
     cityCircle = new google.maps.Circle();
-    reportSquare[0] = new google.maps.Polygon();
+
+
+
+
     earthquakes = initEarthquake();
     //var largeInfowindow = new google.maps.InfoWindow();
 
@@ -137,7 +453,7 @@ function initMap() { //init map
             map: null,
             position: position,
             title: title,
-            icon: makeMarkerIcon(),
+            // icon: makeMarkerIcon(),
 
             //animation: google.maps.Animation.DROP,
             id: i //i not 1
@@ -147,7 +463,7 @@ function initMap() { //init map
 
         cityMarker.addListener('click', function() {
 
-            populateInfoWindow(this, largeInfowindow);
+            showCityInfoWindow(this, cityInfoWindow);
             this.setAnimation(google.maps.Animation.BOUNCE);
             stopAnimation(this);
         });
@@ -189,6 +505,18 @@ function initMap() { //init map
         });
 
 
+        var earthquakeMarker2 = new google.maps.Marker({
+
+            map: map2,
+            position: position,
+            title: title,
+            icon: cycleIcon(earthquakes[i].mag),
+            clickable: false,
+            // animation: google.maps.Animation.DROP,
+            id: i //i not 1
+        });
+
+
         earthquakesMarkers.push(earthquakeMarker);
 
         earthquakeMarker.addListener('click', function() {
@@ -207,7 +535,7 @@ function initMap() { //init map
 
             hideAllCitiesMarkers();
             showImpactCities(this, citiesMarkers);
-            populateInfoWindow(this, largeInfowindow);
+            earthquakeInfoWindow(this, largeInfowindow);
             getCircle(this, this.mag);
             showReports(reports);
 
@@ -234,6 +562,7 @@ function initMap() { //init map
         hideAllCitiesMarkers();
         showAllEarthquakesMarkers();
         removeCityList();
+        showNone();
         map.setZoom(3);
         map.setCenter({
             lat: 13.8,
@@ -243,6 +572,7 @@ function initMap() { //init map
 
     //UI control
     $(document).ready(function() {
+      $(".dropdown-button").dropdown();
         $("#btn1").click(function() {
             showMag5();
         });
@@ -258,14 +588,19 @@ function initMap() { //init map
         $("#btn5").click(function() {
             showAllEarthquakesMarkers();
         });
-    });
 
+    });
+    $('.count-earthquake').append('<span>  ' + earthquakesMarkers.length + '</span>');
+    $('.count-city').append('<span>  ' + citiesMarkers.length + '</span>');
+
+    countReport();
+    $('.count-report').append('<span>  ' + numReports + '</span>');
 
 };
 
 
 // Info Window
-function populateInfoWindow(marker, infowindow) {
+function showCityInfoWindow(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
 
     var wikiurl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title + '&format=json&callback=wikiCallback';
@@ -283,9 +618,9 @@ function populateInfoWindow(marker, infowindow) {
         if (infowindow.marker != marker) {
             infowindow.marker = marker;
             if (articleStr == null) {
-                infowindow.setContent('<div>' + marker.title + '</div>' + 'Oops, no such wiki');
+                infowindow.setContent('<div>' + marker.title + '</div>' + 'Oops, cannot find any thing on Wikipeida');
             } else {
-                infowindow.setContent('<div>' + '</div>' + '<a href = "' + url + '">' + articleStr + '</a>');
+                infowindow.setContent('<div>Find out ' + '<a href = "' + url + '">' + articleStr + '</a> on Wikipeida</div>');
             }
             infowindow.open(map, marker);
             // Make sure the marker property is cleared if the infowindow is closed.
@@ -299,6 +634,33 @@ function populateInfoWindow(marker, infowindow) {
         infowindow.setMarker = null;
     });
 }
+
+function earthquakeInfoWindow(marker, infowindow) {
+  if (infowindow.marker != marker) {
+      infowindow.marker = marker;
+
+      infowindow.setContent('<div id="iw-container">' +
+                    '<div class="iw-title">' + marker.title + '</div>' +
+                    '<div class="iw-content">' +
+                      '<div class="iw-subTitle">Mag: <span style="color:red">' + marker.mag +'</span></div>' +
+
+                      '<div class="iw-subTitle">Depth: ' + marker.depth + ' Km</div>' +
+
+                      '<div class="iw-subTitle">Felt #: ' + marker.felt + '</div>' +
+
+                    '</div>' +
+
+                  '</div>');
+      infowindow.open(map, marker);
+
+  };
+  infowindow.addListener('closeclick', function() {
+
+      infowindow.setMarker = null;
+  });
+};
+
+
 
 function makeMarkerIcon() {
     // var markerImage = new google.maps.MarkerImage('img/grey.png',
@@ -365,16 +727,16 @@ function initEarthquake() {
     return array;
 };
 
-// function cycleIcon(magnitude) {
-//     return {
-//         path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-//         fillColor: 'red',
-//         fillOpacity: .2,
-//         scale: Math.pow(2, magnitude) / 2,
-//         strokeColor: 'white',
-//         strokeWeight: 0
-//     };
-// };
+function cycleIcon(magnitude) {
+    return {
+        path: google.maps.SymbolPath.CIRCLE,
+        fillColor: 'red',
+        fillOpacity: .2,
+        scale: Math.pow(2, magnitude) / 5,
+        strokeColor: 'white',
+        strokeWeight: 0
+    };
+};
 
 function earthquakeIcon(magnitude) {
     if (magnitude < 5) {
@@ -603,6 +965,7 @@ function showImpactCities(earthquakeMarker, markers) {
 
     // console.log(earthquakeMarker)
     // console.log(markers)
+    var count = 0;
     for (var i = 0; i < markers.length; i++) {
 
         var dis = google.maps.geometry.spherical.computeDistanceBetween(earthquakeMarker.getPosition(), markers[i].getPosition())
@@ -614,19 +977,29 @@ function showImpactCities(earthquakeMarker, markers) {
         var impactDis = (20 * Math.pow(1.8, (2 * earthquakeMarker.mag - 5)) * 1000) / 1.60934;
         //console.log(impactDis)
         if (dis <= impactDis) {
+          count++;
             markers[i].setMap(map);
             showCityList(markers[i]);
         };
+    };
+    if(count ===0){
+        showNone();
     }
 };
 
 
 function showCityList(marker) {
-    $('.citylist').append('<a href="" class="list-group-city">' + marker.title + '</a>');
+    $('.collection').append('<li class="collection-item list-group-city">' + marker.title + '</li>');
 }
 
 function removeCityList() {
     $('.list-group-city').remove();
+
+}
+
+function showNone(){
+  $('.list-group-city').remove();
+  $('.collection-header').append('<li class="collection-item list-group-city">' + 'None' + '</li>');
 }
 
 //Panel function
@@ -679,7 +1052,7 @@ function synAjaxFuntion(url) {
         res = XHR.responseText;
     }
     var jsonRes = JSON.parse(res)
-    console.log(jsonRes);
+
     return jsonRes;
 }
 
@@ -733,13 +1106,47 @@ function getReportArray(marker) {
                     array[index] = newObejct;
                 })(index);
             }
-            console.log(array);
+
         });
     });
-    console.log(array);
+
     return array;
 
 }
+
+// function showReports(reports){
+//   if (reports != null) {
+//     for (var i = 0; i < reports.length; i++) {
+//
+//       var corrds = reports[i].square;
+//        var reportSquare = new google.maps.Polygon({
+//         paths: corrds,
+//         strokeColor: '#FF0000',
+//         strokeOpacity: 0.8,
+//         strokeWeight: 2,
+//         fillColor: '#FF0000',
+//         fillOpacity: 0.35
+//       });
+//       reportSquare.setMap(map);
+//       var tmp = reports[i];
+//
+//       reportSquares.push(reportSquare);
+//
+//
+//       reportSquare.addListener('mouseover', function() {
+//         console.log(tmp);
+//           showReportList(tmp);
+//
+//       });
+//
+//       reportSquare.addListener('mouseout', function() {
+//         removeReportList();
+//       });
+//
+//     };
+//   };
+//
+// };
 
 function showReports(reports){
   if (reports != null) {
@@ -757,8 +1164,17 @@ function showReports(reports){
         });
         reportSquare[i].setMap(map);
         var tmp = reports[i];
+<<<<<<< HEAD
+=======
 
+        var reportInfowindow = new google.maps.InfoWindow();
+        reportSquare[i].addListener('mouseover', function() {
+>>>>>>> starsyork/master
 
+            //showReportList(tmp);
+            // showReportInfoWindow(tmp, reportInfoWindow);
+
+<<<<<<< HEAD
         reportSquare[i].addListener('mouseover', function() {
           console.log(tmp);
             showReportList(tmp);
@@ -770,10 +1186,32 @@ function showReports(reports){
         });
       })();
 
+=======
+            reportInfowindow.setContent('<div>' +
+                          '<div ><b>' + tmp.properties.name + '</b></div>' +
+                          '<div>' +
+                            '<div ><b>Felt Itensity:  </b>'+ '<span style="color: red">'+ tmp.properties.cdi+'</span>' +'</div>' +
+                            '<div ><b>Response #: ' +tmp.properties.nresp +'</b></div>' +
+                            '<div ><b>Distance:  ' + tmp.properties.dist + ' Km</b></div>' +
 
+
+                            // '<br>Phone. +351 234 320 600<br>e-mail: geral@vaa.pt<br>www: www.myvistaalegre.com</p>'+
+                          '</div>' +
+                        '</div>');
+>>>>>>> starsyork/master
+
+
+            reportInfowindow.setPosition(tmp.square[2]);
+            reportInfowindow.open(map);
+        });
+
+        reportSquare[i].addListener('mouseout', function() {
+          //removeReportList();
+          reportInfowindow.close();
+        });
+      })();
     };
   };
-
 };
 function removeReports(){
 
@@ -783,10 +1221,25 @@ function removeReports(){
 }
 
 
-function showReportList(marker) {
-    $('.reportlist').append('<a href="" class="list-group-report">' + marker.properties.nresp + '</a>');
-}
+// function showReportList(marker) {
+//     $('.reportlist').append('<div class="list-group-report" >'+
+//                             '<b> Report' + marker.properties.name + '</b>'+
+//                             '<p> Number of Response: ' + marker.properties.nresp + '</p>' +
+//                             '<p> Felt CID' + marker.properties.cdi + '</p>'+
+//                             '<p> Distance' + marker.properties.dist + '</p></div>'
+//                           );
+// }
+//
+// function removeReportList() {
+//     $('.list-group-report').remove();
+// }
 
-function removeReportList() {
-    $('.list-group-report').remove();
+
+function countReport(){
+  for (var i = 0; i < earthquakesMarkers.length; i++) {
+      if (earthquakesMarkers[i].felt != null) {
+          numReports = numReports + earthquakesMarkers[i].felt;
+      }
+  }
+  return numReports;
 }
