@@ -6,9 +6,11 @@ var citiesMarkers = [];
 var earthquakesMarkers = [];
 var ciryCircle;
 var reportSquare = [];
+var line = [];
 // var reportInfoWindow;
 
 var numReports = 0;
+var earthquakeURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson";
 
 function showAlert(){
   if(map=== undefined){
@@ -437,6 +439,7 @@ function initMap() { //init map
 
 
             removeReports();
+            hideAllReports();
             removeCircle();
             hideOtherEarthquakesMarkers(this);
             removeCityList();
@@ -473,6 +476,7 @@ function initMap() { //init map
         showAllEarthquakesMarkers();
         removeCityList();
         showNone();
+        hideAllReports();
         map.setZoom(3);
         map.setCenter({
             lat: 13.8,
@@ -556,7 +560,7 @@ function earthquakeInfoWindow(marker, infowindow) {
 
             '<div class="iw-subTitle">Depth: ' + marker.depth + ' Km</div>' +
 
-            '<div class="iw-subTitle">Felt #: ' + marker.felt + '</div>' +
+            '<div class="iw-subTitle">Response number: ' + marker.felt + '</div>' +
 
             '</div>' +
 
@@ -598,8 +602,8 @@ function initEarthquake() {
             localStorage.res = xhr.responseText;
         }
     };
-
-    xhr.open("get", "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson", true);
+    
+    xhr.open("get", earthquakeURL, true);
     xhr.send(null);
 
     var JSONres = JSON.parse(localStorage.res);
@@ -737,6 +741,12 @@ function hideAllCitiesMarkers() {
 function showAllEarthquakesMarkers() {
     for (var i = 0; i < earthquakesMarkers.length; i++) {
         earthquakesMarkers[i].setMap(map);
+    }
+};
+
+function hideAllEarthquakesMarkers() {
+    for (var i = 0; i < earthquakesMarkers.length; i++) {
+        earthquakesMarkers[i].setMap(null);
     }
 };
 
@@ -950,6 +960,8 @@ function showReports(reports) {
                 reportSquare[i].setMap(map);
                 var tmp = reports[i];
 
+                line.push(reportSquare[i]);
+
                 var reportInfowindow = new google.maps.InfoWindow();
                 reportSquare[i].addListener('mouseover', function() {
 
@@ -986,7 +998,8 @@ function removeReports() {
 
     for (var i = 0; i < reportSquare.length; i++) {
         reportSquare[i].setMap(null);
-    }
+    };
+    console.log(123);
 }
 
 
@@ -1012,3 +1025,50 @@ function countReport() {
     }
     return numReports;
 }
+
+
+
+function earthquakeMode(){
+  hideAllReports();
+  removeReports();
+  removeCircle();
+  hideAllCitiesMarkers();
+  showAllEarthquakesMarkers();
+  removeCityList();
+  showNone();
+};
+
+
+function cityMode(){
+  hideAllReports();
+  removeReports();
+  hideAllEarthquakesMarkers();
+  for (var i = 0; i < earthquakesMarkers.length; i++) {
+      // earthquakesMarkers[i].setMap(map);
+      showImpactCities(earthquakesMarkers[i],citiesMarkers);
+  };
+};
+
+
+function responseMode(){
+  var mymessage=confirm("It might cost 10-20 second. Click OK to see the responses.");
+    if(mymessage==true)
+    {
+      hideAllEarthquakesMarkers();
+      hideAllCitiesMarkers();
+      for (var i = 0; i < earthquakesMarkers.length; i++) {
+          // earthquakesMarkers[i].setMap(map);
+          var reports = getReportArray(earthquakesMarkers[i]);
+          showReports(reports);
+      };
+    }else
+    {   };
+
+};
+
+function hideAllReports(){
+
+  for (var i = 0; i < line.length; i++) {
+      line[i].setMap(null);
+  };
+};
