@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="card-content">
-                        <p>This is an interactive map showing earthquakes happened worldwide in last 7 days larger than 4.5 Mag. <br>Click the Earthquake Marker to see how many people felt it (red square) and possibly felt cities.<br>You could click top right to filtrate the earthquakes.<br>
+                        <p>This is an interactive map showing earthquakes happened worldwide in last 7 days larger than 4.5 Mag. <br>Click the Earthquake Marker to see how many people felt it (red square) and major cities which possibly be impacted.<br>For the earthquakes which have no response will display an estimated impact area<br>You could click top right to filtrate the earthquakes.<br>
                           Data Source<a href="http://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php" target="_blank"> USGS.</a>
 
                         </p>
@@ -51,10 +51,10 @@
                     <div class="card-content grey lighten-4">
                         <div id="test1">
                             <li class="list-group-item count-earthquake">4.5+ earthqukaes last week: </li>
-                            <div style="float:left;color:black;background-color:rgb(101, 216, 102); width:100px"><center>&lt;=5 Mag.</center></div>
-                            <div style="float:left;color:black;background-color:rgb(244, 244, 108); width:100px"><center>&lt;=5.5 Mag.</center></div>
-                            <div style="float:left;color:black;background-color:rgb(241, 197, 46); width:100px"><center>&lt;=6 Mag.</center></div>
-                            <div style="float:left;color:black;background-color:rgb(253, 70, 86); width:100px"><center>&gt;6 Mag.</center></div>
+                            <div style="float:left;color:black;background-color:rgb(101, 216, 102); width:100px"><center>4.5-5 Mag.</center></div>
+                            <div style="float:left;color:black;background-color:rgb(244, 244, 108); width:100px"><center>5-5.5 Mag.</center></div>
+                            <div style="float:left;color:black;background-color:rgb(241, 197, 46); width:100px"><center>5.5-6 Mag.</center></div>
+                            <div style="float:left;color:black;background-color:rgb(253, 70, 86); width:100px"><center>&gt;=6 Mag.</center></div>
                             <br>
                         </div>
                         <div id="test2">
@@ -108,7 +108,7 @@
                     <li><a id="btn1" style="background-color:rgb(101, 216, 102)">4.5-5</a></li>
                     <li><a id="btn2" style="background-color:rgb(244, 244, 108)">5-5.5</a></li>
                     <li><a id="btn3" style="background-color:rgb(241, 197, 46)">5.5-6</a></li>
-                    <li><a id="btn4" style="background-color:rgb(253, 70, 86)">&gt; 6</a></li>
+                    <li><a id="btn4" style="background-color:rgb(253, 70, 86)">&gt;=6</a></li>
                     <li class="divider"></li>
                     <li><a id="btn5">All</a></li>
                 </ul>
