@@ -1,4 +1,4 @@
-## Globle Earthquakes with Cities Which Possibly Be Impacted
+## Global Earthquakes with Cities Which Possibly Be Impacted
 
 
 Data visualization about real-time globle earthquakes, also display the reports of DYFI (Do You Feel It) and cities that possibly be  impacted.
@@ -6,4 +6,4 @@ Data visualization about real-time globle earthquakes, also display the reports 
 
 Data source comes from USGS.
 
-[Click here](https://starsyork.github.io/Globle-Earthquake-Visualization/) to see the website.
+[Click here](https://starsyork.github.io/Global-Earthquake-Visualization/) to see the website.
