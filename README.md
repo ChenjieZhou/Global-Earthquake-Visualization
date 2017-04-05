@@ -6,4 +6,4 @@ Data visualization about real-time globle earthquakes, also display the reports 
 
 Data source comes from USGS.
 
-[Click here](https://starsyork.github.io/Global-Earthquake-Visualization/) to see the website.
+[Click here](https://benny201.github.io/Globle-Earthquake-Visualization/) to see the website.
