@@ -28,7 +28,7 @@ From the USGS website, [Link](https://earthquake.usgs.gov/data/dyfi/background.p
 ##Visualization:
 1. Technology
  * JavaScript: This visualization based on JavaScript.
- 
+
  * Google Maps API: Our projects’ map based on Google Maps API.
 
  * jQuery: We use jQuery to get elements from DOM and detect the changes of DOM.
@@ -36,7 +36,7 @@ From the USGS website, [Link](https://earthquake.usgs.gov/data/dyfi/background.p
  * Ajax: it is the use of the XMLHttpRequest object to communicate with server-side scripts.
 
  * Materialize: We use Materialize to build website’s UI.
- 
+
  * Github: Version control.
 
 2. Mode
@@ -57,5 +57,7 @@ From the USGS website, [Link](https://earthquake.usgs.gov/data/dyfi/background.p
  * Relation between responses and cities of each earthquake: When user clicks any earthquake marker, the application automatically hide any other earthquakes and show the cities that possibly be impacted by this earthquake and all responses to this earthquake.
 
  * Show cities list: this function extends from the last one. You will see all possibly be impacted cities on the bottom left list.
+
+ hahahahahaha
 
 
